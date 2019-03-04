@@ -12,6 +12,8 @@
     <modules>
         <module>project-entities</module>
         <module>project-api</module>
+        <module>project-services</module>
+        <module>project-repositories</module>
     </modules>
 
     <properties>
