@@ -1,6 +1,7 @@
 package br.com.rk.services;
 
 import br.com.rk.entities.Entidade;
+import br.com.rk.services.exception.ServicoException;
 
 /**
  * @author Rhuan Karlus
@@ -8,10 +9,10 @@ import br.com.rk.entities.Entidade;
  */
 public interface Servico<E extends Entidade> {
 
-    E buscar(Long id);
+    E buscar(Long id) throws ServicoException;
 
-    E salvar(E entidade);
+    E salvar(E entidade) throws ServicoException;
 
-    void deletar(Long id);
+    void deletar(Long id) throws ServicoException;
 
 }
