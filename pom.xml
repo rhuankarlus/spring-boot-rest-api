@@ -217,6 +217,28 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Projeto -->
+            <dependency>
+                <groupId>br.com.rk</groupId>
+                <artifactId>project-entities</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.rk</groupId>
+                <artifactId>project-repositories</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.rk</groupId>
+                <artifactId>project-services</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.rk</groupId>
+                <artifactId>project-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- Spring -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

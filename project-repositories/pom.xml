@@ -5,11 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>project-parent</artifactId>
         <groupId>br.com.rk</groupId>
+        <artifactId>project-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>project-repositories</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>br.com.rk</groupId>
+            <artifactId>project-entities</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

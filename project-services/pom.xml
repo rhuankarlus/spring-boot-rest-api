@@ -12,4 +12,11 @@
 
     <artifactId>project-services</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>br.com.rk</groupId>
+            <artifactId>project-repositories</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
