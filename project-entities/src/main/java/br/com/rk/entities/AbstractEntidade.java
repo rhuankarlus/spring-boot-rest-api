@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass;
  * @since 03/03/19
  */
 @MappedSuperclass
-public abstract class AbstractEntidade implements Entidade<Long> {
+public abstract class AbstractEntidade implements Entidade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
