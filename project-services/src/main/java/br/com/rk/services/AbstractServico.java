@@ -23,7 +23,7 @@ public abstract class AbstractServico<E extends Entidade> implements Servico<E> 
     }
 
     @Override
-    public E buscar(Long id) throws ServicoException {
+    public E findById(Long id) throws ServicoException {
         if (id == null) {
             throw new ServicoException("O ID informado não pode ser nulo.");
         }
@@ -32,7 +32,7 @@ public abstract class AbstractServico<E extends Entidade> implements Servico<E> 
     }
 
     @Override
-    public E salvar(E entidade) throws ServicoException {
+    public E persist(E entidade) throws ServicoException {
         try {
             return repositorio.save(entidade);
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public abstract class AbstractServico<E extends Entidade> implements Servico<E> 
     }
 
     @Override
-    public void deletar(Long id) throws ServicoException {
+    public void delete(Long id) throws ServicoException {
         try {
             repositorio.deleteById(id);
         } catch (Exception e) {

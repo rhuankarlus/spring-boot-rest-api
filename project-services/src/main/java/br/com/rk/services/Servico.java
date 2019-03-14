@@ -21,7 +21,7 @@ public interface Servico<E extends Entidade> {
      * @throws ServicoException caso nenhuma entidade com o ID informado tenha sido encontrada ou haja algum erro
      *                          durante a busca pela entidade
      */
-    E buscar(Long id) throws ServicoException;
+    E findById(Long id) throws ServicoException;
 
     /**
      * Persiste os dados de uma entidade no banco
@@ -30,7 +30,7 @@ public interface Servico<E extends Entidade> {
      * @return A entidade atualizada
      * @throws ServicoException Caso haja algum erro durante a persistência da entidade
      */
-    E salvar(E entidade) throws ServicoException;
+    E persist(E entidade) throws ServicoException;
 
     /**
      * Remove uma entidade do banco
@@ -38,7 +38,7 @@ public interface Servico<E extends Entidade> {
      * @param id ID da entidade que será removida
      * @throws ServicoException Caso ocorra algum erro durante a remoção da entidade
      */
-    void deletar(Long id) throws ServicoException;
+    void delete(Long id) throws ServicoException;
 
     /**
      * @return Todas as entidades desse tipo. <b>CUIDADO AO USAR ESSE MÉTODO, PODE DEGRADAR MUITO A PERFORMANCE!</b>
