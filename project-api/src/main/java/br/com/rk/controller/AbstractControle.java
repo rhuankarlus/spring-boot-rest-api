@@ -1,6 +1,5 @@
 package br.com.rk.controller;
 
-import br.com.rk.converters.Conversor;
 import br.com.rk.entities.Entidade;
 import br.com.rk.services.Servico;
 import org.springframework.beans.factory.annotation.Autowired;
