@@ -11,8 +11,18 @@ public class ProjectResponse {
     private Paginacao pagination;
 
     public static ProjectResponse of(DTO dto) {
+        return of(null, dto, null);
+    }
+
+    public static ProjectResponse of(Metadata metadata, DTO dto) {
+        return of(metadata, dto, null);
+    }
+
+    public static ProjectResponse of(Metadata metadata, DTO dto, Paginacao pagination) {
         final ProjectResponse projectResponse = new ProjectResponse();
+        projectResponse.headers = metadata;
         projectResponse.body = dto;
+        projectResponse.pagination = pagination;
         return projectResponse;
     }
 
