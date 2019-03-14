@@ -10,28 +10,28 @@ public class ProjectResponse {
     private DTO body;
     private Paginacao pagination;
 
-    public static ProjectResponse of(DTO dto) {
-        return of(null, dto, null);
-    }
-
-    public static ProjectResponse of(Metadata metadata, DTO dto) {
-        return of(metadata, dto, null);
-    }
-
-    public static ProjectResponse of(Metadata metadata, DTO dto, Paginacao pagination) {
-        final ProjectResponse projectResponse = new ProjectResponse();
-        projectResponse.headers = metadata;
-        projectResponse.body = dto;
-        projectResponse.pagination = pagination;
-        return projectResponse;
-    }
-
     public class Metadata {
         // todo: inserir os metadados padrões de uma resposta...
     }
 
     public class Paginacao {
         // todo: inserir informações sobre a página atual, caso não houver página pode ser nulo
+    }
+
+    public static ProjectResponse of(final DTO dto) {
+        return of(null, dto, null);
+    }
+
+    public static ProjectResponse of(final Metadata metadata, final DTO dto) {
+        return of(metadata, dto, null);
+    }
+
+    public static ProjectResponse of(final Metadata metadata, final DTO dto, final Paginacao pagination) {
+        final ProjectResponse projectResponse = new ProjectResponse();
+        projectResponse.headers = metadata;
+        projectResponse.body = dto;
+        projectResponse.pagination = pagination;
+        return projectResponse;
     }
 
     public Metadata getHeaders() {
