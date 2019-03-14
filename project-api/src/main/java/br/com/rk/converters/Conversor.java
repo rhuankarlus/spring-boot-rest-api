@@ -11,6 +11,6 @@ public interface Conversor<D extends DTO, E extends Entidade> {
 
     E toEntidade(D dto);
 
-    D fromEntidade(E entidade);
+    D toDTO(E entidade);
 
 }
