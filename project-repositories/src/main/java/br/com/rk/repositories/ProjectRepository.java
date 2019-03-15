@@ -1,6 +1,6 @@
 package br.com.rk.repositories;
 
-import br.com.rk.entities.Entidade;
+import br.com.rk.entities.ProjectEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -9,5 +9,5 @@ import org.springframework.data.repository.NoRepositoryBean;
  * @since 03/03/19
  */
 @NoRepositoryBean
-public interface Repositorio<E extends Entidade> extends JpaRepository<E, Long> {
+public interface ProjectRepository<E extends ProjectEntity> extends JpaRepository<E, Long>, CustomRepository<E>  {
 }

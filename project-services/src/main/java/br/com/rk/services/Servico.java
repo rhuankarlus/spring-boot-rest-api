@@ -1,6 +1,6 @@
 package br.com.rk.services;
 
-import br.com.rk.entities.Entidade;
+import br.com.rk.entities.ProjectEntity;
 import br.com.rk.services.exception.ServicoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +11,7 @@ import java.util.List;
  * @author Rhuan Karlus
  * @since 04/03/19
  */
-public interface Servico<E extends Entidade> {
+public interface Servico<E extends ProjectEntity> {
 
     /**
      * Busca uma entidade pelo seu ID
@@ -26,7 +26,7 @@ public interface Servico<E extends Entidade> {
     /**
      * Persiste os dados de uma entidade no banco
      *
-     * @param entidade Entidade que será persistida
+     * @param entidade ProjectEntity que será persistida
      * @return A entidade atualizada
      * @throws ServicoException Caso haja algum erro durante a persistência da entidade
      */

@@ -1,7 +1,7 @@
 package br.com.rk.services;
 
-import br.com.rk.entities.Entidade;
-import br.com.rk.repositories.Repositorio;
+import br.com.rk.entities.ProjectEntity;
+import br.com.rk.repositories.ProjectRepository;
 import br.com.rk.services.exception.ServicoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,13 +13,13 @@ import java.util.List;
  * @author Rhuan Karlus
  * @since 04/03/2019
  */
-public abstract class AbstractServico<E extends Entidade> implements Servico<E> {
+public abstract class AbstractServico<E extends ProjectEntity> implements Servico<E> {
 
     @Autowired
-    private Repositorio<E> repositorio;
+    private ProjectRepository<E> projectRepository;
 
-    protected Repositorio<E> getRepositorio() {
-        return repositorio;
+    protected ProjectRepository<E> getProjectRepository() {
+        return projectRepository;
     }
 
     @Override
@@ -28,13 +28,13 @@ public abstract class AbstractServico<E extends Entidade> implements Servico<E> 
             throw new ServicoException("O ID informado não pode ser nulo.");
         }
 
-        return repositorio.findById(id).orElseThrow(() -> new ServicoException("Entidade com ID " + id + " não encontrada."));
+        return projectRepository.findById(id).orElseThrow(() -> new ServicoException("ProjectEntity com ID " + id + " não encontrada."));
     }
 
     @Override
     public E persist(E entidade) throws ServicoException {
         try {
-            return repositorio.save(entidade);
+            return projectRepository.save(entidade);
         } catch (Exception e) {
             throw new ServicoException("Erro ao tentar persistir a entidade", e);
         }
@@ -43,7 +43,7 @@ public abstract class AbstractServico<E extends Entidade> implements Servico<E> 
     @Override
     public void delete(Long id) throws ServicoException {
         try {
-            repositorio.deleteById(id);
+            projectRepository.deleteById(id);
         } catch (Exception e) {
             throw new ServicoException("Erro ao tentar deletar a entidade", e);
         }
@@ -52,7 +52,7 @@ public abstract class AbstractServico<E extends Entidade> implements Servico<E> 
     @Override
     public List<E> findAll() throws ServicoException {
         try {
-            return repositorio.findAll();
+            return projectRepository.findAll();
         } catch (Exception e) {
             throw new ServicoException("Erro ao tentar ler a lista de entidades do banco", e);
         }
@@ -61,7 +61,7 @@ public abstract class AbstractServico<E extends Entidade> implements Servico<E> 
     @Override
     public Page<E> findAll(Pageable paginador) throws ServicoException {
         try {
-            return repositorio.findAll(paginador);
+            return projectRepository.findAll(paginador);
         } catch (Exception e) {
             throw new ServicoException("Erro ao tentar ler a página de entidades do banco", e);
         }

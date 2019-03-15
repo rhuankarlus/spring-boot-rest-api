@@ -3,7 +3,7 @@ package br.com.rk.controller;
 import br.com.rk.controller.dto.DTO;
 import br.com.rk.controller.dto.ProjectResponse;
 import br.com.rk.converters.Conversor;
-import br.com.rk.entities.Entidade;
+import br.com.rk.entities.ProjectEntity;
 import br.com.rk.services.exception.ServicoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,32 +19,32 @@ import java.util.stream.Collectors;
  * @author Rhuan Karlus
  * @since 04/03/2019
  */
-public abstract class AbstractCrudControle<D extends DTO, E extends Entidade> extends AbstractControle<E> {
+public abstract class AbstractCrudControle<D extends DTO, E extends ProjectEntity> extends AbstractControle<E> {
 
     @Autowired
     private Conversor<D, E> conversor;
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity<ProjectResponse> findAll(@PageableDefault Pageable pageable) throws ServicoException {
+    public ResponseEntity<ProjectResponse> findAll(@PageableDefault final Pageable pageable) throws ServicoException {
         return ResponseEntity.ok(convertPage(getServico().findAll(pageable)));
     }
 
     @ResponseBody
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProjectResponse> getById(@PathVariable("id") Long id) throws ServicoException {
+    public ResponseEntity<ProjectResponse> getById(@PathVariable("id") final Long id) throws ServicoException {
         return ResponseEntity.ok(ProjectResponse.of(conversor.toDTO(getServico().findById(id))));
     }
 
     @PutMapping
     @ResponseBody
-    public ResponseEntity<ProjectResponse> persist(@RequestBody D dto) throws ServicoException {
+    public ResponseEntity<ProjectResponse> persist(@RequestBody final D dto) throws ServicoException {
         return ResponseEntity.ok(ProjectResponse.of(conversor.toDTO(getServico().persist(conversor.toEntity(dto)))));
     }
 
     @ResponseBody
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity delete(@PathVariable("id") Long id) throws ServicoException {
+    public ResponseEntity delete(@PathVariable("id") final Long id) throws ServicoException {
         getServico().delete(id);
         return ResponseEntity.ok().build();
     }
