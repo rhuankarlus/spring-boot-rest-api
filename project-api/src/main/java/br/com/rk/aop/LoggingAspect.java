@@ -29,7 +29,6 @@ public class LoggingAspect {
             " || within(@org.springframework.stereotype.Service *)" +
             " || within(@org.springframework.web.bind.annotation.RestController *)")
     public void springBeanPointcut() {
-        // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
 
     /**
@@ -37,7 +36,6 @@ public class LoggingAspect {
      */
     @Pointcut("within(br.com.rk..*)")
     public void applicationPackagePointcut() {
-        // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
 
     /**
