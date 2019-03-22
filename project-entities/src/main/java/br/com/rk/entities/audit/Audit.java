@@ -48,4 +48,12 @@ public class Audit extends AbstractEntity {
     public void setType(AuditType type) {
         this.type = type;
     }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 }
