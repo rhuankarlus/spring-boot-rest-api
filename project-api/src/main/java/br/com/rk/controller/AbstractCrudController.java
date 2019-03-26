@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author Rhuan Karlus
  * @since 04/03/2019
  */
-public abstract class AbstractCrudControle<D extends DTO, E extends ProjectEntity> extends AbstractControle<E> {
+public abstract class AbstractCrudController<D extends DTO, E extends ProjectEntity> extends AbstractController<E> {
 
     @Autowired
     private Conversor<D, E> conversor;
