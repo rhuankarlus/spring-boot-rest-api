@@ -13,7 +13,7 @@ import java.util.List;
  * @author Rhuan Karlus
  * @since 04/03/2019
  */
-public abstract class AbstractService<E extends ProjectEntity> implements Service<E> {
+public abstract class AbstractService<E extends ProjectEntity> implements ProjectService<E> {
 
     @Autowired
     private ProjectRepository<E> projectRepository;
