@@ -11,7 +11,7 @@ import java.util.List;
  * @author Rhuan Karlus
  * @since 04/03/19
  */
-public interface Servico<E extends ProjectEntity> {
+public interface Service<E extends ProjectEntity> {
 
     /**
      * Busca uma entidade pelo seu ID

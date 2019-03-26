@@ -1,7 +1,7 @@
 package br.com.rk.controller;
 
 import br.com.rk.entities.ProjectEntity;
-import br.com.rk.services.Servico;
+import br.com.rk.services.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractControle<E extends ProjectEntity> {
 
     @Autowired
-    private Servico<E> servico;
+    private Service<E> service;
 
-    protected Servico<E> getServico() {
-        return this.servico;
+    protected Service<E> getService() {
+        return this.service;
     }
 
 }

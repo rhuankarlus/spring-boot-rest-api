@@ -27,25 +27,25 @@ public abstract class AbstractCrudControle<D extends DTO, E extends ProjectEntit
     @GetMapping
     @ResponseBody
     public ResponseEntity<ProjectResponse> findAll(@PageableDefault final Pageable pageable) throws ServicoException {
-        return ResponseEntity.ok(convertPage(getServico().findAll(pageable)));
+        return ResponseEntity.ok(convertPage(getService().findAll(pageable)));
     }
 
     @ResponseBody
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProjectResponse> getById(@PathVariable("id") final Long id) throws ServicoException {
-        return ResponseEntity.ok(ProjectResponse.of(conversor.toDTO(getServico().findById(id))));
+        return ResponseEntity.ok(ProjectResponse.of(conversor.toDTO(getService().findById(id))));
     }
 
     @PutMapping
     @ResponseBody
     public ResponseEntity<ProjectResponse> persist(@RequestBody final D dto) throws ServicoException {
-        return ResponseEntity.ok(ProjectResponse.of(conversor.toDTO(getServico().persist(conversor.toEntity(dto)))));
+        return ResponseEntity.ok(ProjectResponse.of(conversor.toDTO(getService().persist(conversor.toEntity(dto)))));
     }
 
     @ResponseBody
     @DeleteMapping(value = "/{id}")
     public ResponseEntity delete(@PathVariable("id") final Long id) throws ServicoException {
-        getServico().delete(id);
+        getService().delete(id);
         return ResponseEntity.ok().build();
     }
 
