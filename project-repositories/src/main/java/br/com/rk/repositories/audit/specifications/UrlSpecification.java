@@ -2,6 +2,7 @@ package br.com.rk.repositories.audit.specifications;
 
 import br.com.rk.entities.audit.Audit;
 import br.com.rk.repositories.specifications.string.AbstractStringFieldSpecification;
+import br.com.rk.repositories.specifications.string.Operation;
 import br.com.rk.repositories.specifications.string.StringSearchCriteria;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -20,8 +21,8 @@ public class UrlSpecification extends AbstractStringFieldSpecification<Audit> {
 
     private final StringSearchCriteria urlSearchCriteria;
 
-    public UrlSpecification(final StringSearchCriteria urlSearchCriteria) {
-        this.urlSearchCriteria = urlSearchCriteria;
+    public UrlSpecification(final Operation operation, final String value) {
+        this.urlSearchCriteria = new StringSearchCriteria("url", operation, value);
     }
 
     @Override
