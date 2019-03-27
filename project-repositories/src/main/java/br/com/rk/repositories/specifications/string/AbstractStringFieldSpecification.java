@@ -2,6 +2,7 @@ package br.com.rk.repositories.specifications.string;
 
 import br.com.rk.entities.ProjectEntity;
 import br.com.rk.repositories.specifications.ProjectSpecification;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,6 +19,10 @@ public abstract class AbstractStringFieldSpecification<E extends ProjectEntity> 
 
     @Override
     public Predicate toPredicate(Root<E> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+
+        if (!StringUtils.hasText(getCriteria().getValue())) {
+            return null;
+        }
 
         switch (getCriteria().getOperation()) {
             case EQ:
