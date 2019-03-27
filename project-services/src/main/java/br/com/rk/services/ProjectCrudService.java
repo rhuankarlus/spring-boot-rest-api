@@ -55,6 +55,13 @@ public interface ProjectCrudService<E extends ProjectEntity> {
      */
     Page<E> findAll(Pageable paginador) throws ServiceException;
 
+    /**
+     * Search for every {@code entity} by the example
+     *
+     * @param entity   Example object to be search
+     * @param pageable Pagination object to paginate results
+     * @return A page with the paginated result based on the example
+     */
     Page<E> findByExample(final E entity, final Pageable pageable) throws ServiceException;
 
 }
