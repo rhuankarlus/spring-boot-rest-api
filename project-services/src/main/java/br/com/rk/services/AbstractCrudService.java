@@ -10,10 +10,12 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 /**
+ * Service abstraction for persistent models
+ *
  * @author Rhuan Karlus
  * @since 04/03/2019
  */
-public abstract class AbstractService<E extends ProjectEntity> implements ProjectService<E> {
+public abstract class AbstractCrudCrudService<E extends ProjectEntity> implements ProjectCrudService<E> {
 
     @Autowired
     private ProjectRepository<E> projectRepository;
