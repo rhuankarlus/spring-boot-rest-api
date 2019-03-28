@@ -43,7 +43,7 @@ public class AuditConversor implements Conversor<AuditDTO, Audit> {
         dto.setUrl(audit.getUrl());
         dto.setContent(audit.getContent());
         dto.setType(audit.getType().getCode());
-        dto.setDateTime(null);
+        dto.setDateTime(audit.getDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 
         return dto;
     }

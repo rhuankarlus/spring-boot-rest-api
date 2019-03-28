@@ -48,10 +48,7 @@ public class AuditTypeTest {
 
     @Test
     public void should_throw_exception_when_code_not_exists() throws EnumNotFoundException {
-        final Integer nonExistentCode = Arrays.stream(AuditType.values())
-                .mapToInt(AuditType::getCode)
-                .min()
-                .orElse(0) - 1;
+        final Integer nonExistentCode = -1;
 
         exceptionRule.expect(EnumNotFoundException.class);
         exceptionRule.expectMessage("The code " + nonExistentCode + " doesn't belong to any constant.");

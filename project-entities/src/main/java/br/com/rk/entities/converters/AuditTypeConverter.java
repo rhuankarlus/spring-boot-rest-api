@@ -19,7 +19,7 @@ public class AuditTypeConverter implements AttributeConverter<AuditType, Integer
 
     @Override
     public Integer convertToDatabaseColumn(AuditType auditType) {
-        return auditType.getCode();
+        return auditType == null ? null : auditType.getCode();
     }
 
     @Override
