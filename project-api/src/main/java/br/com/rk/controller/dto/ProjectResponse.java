@@ -1,19 +1,21 @@
 package br.com.rk.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.domain.Sort;
 
 /**
  * @author Rhuan Karlus
  * @since 06/03/2019
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectResponse {
 
     private Metadata headers;
-    private Object body;
+    private Object content;
     private Pagination pagination;
 
     public class Metadata {
-        // todo: inserir os metadados padrões de uma resposta...
+
     }
 
     public static class Pagination {
@@ -53,18 +55,18 @@ public class ProjectResponse {
         }
     }
 
-    public static ProjectResponse of(final Object body) {
-        return of(null, body, null);
+    public static ProjectResponse of(final Object content) {
+        return of(null, content, null);
     }
 
-    public static ProjectResponse of(final Metadata metadata, final Object body) {
-        return of(metadata, body, null);
+    public static ProjectResponse of(final Metadata metadata, final Object content) {
+        return of(metadata, content, null);
     }
 
-    public static ProjectResponse of(final Metadata metadata, final Object body, final Pagination pagination) {
+    public static ProjectResponse of(final Metadata metadata, final Object content, final Pagination pagination) {
         final ProjectResponse projectResponse = new ProjectResponse();
         projectResponse.headers = metadata;
-        projectResponse.body = body;
+        projectResponse.content = content;
         projectResponse.pagination = pagination;
         return projectResponse;
     }
@@ -77,12 +79,12 @@ public class ProjectResponse {
         this.headers = headers;
     }
 
-    public Object getBody() {
-        return body;
+    public Object getContent() {
+        return content;
     }
 
-    public void setBody(Object body) {
-        this.body = body;
+    public void setContent(Object content) {
+        this.content = content;
     }
 
     public Pagination getPagination() {

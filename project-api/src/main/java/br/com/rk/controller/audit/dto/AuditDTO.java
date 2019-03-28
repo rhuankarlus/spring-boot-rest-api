@@ -2,8 +2,6 @@ package br.com.rk.controller.audit.dto;
 
 import br.com.rk.controller.dto.DTO;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Rhuan Karlus
  * @since 27/03/19
