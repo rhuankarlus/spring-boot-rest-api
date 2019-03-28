@@ -1,5 +1,7 @@
 package br.com.rk.entities.audit;
 
+import br.com.rk.exceptions.EnumNotFoundException;
+
 import java.util.Arrays;
 
 /**
@@ -8,7 +10,8 @@ import java.util.Arrays;
  */
 public enum AuditType {
 
-    ERROR(1, "Error");
+    ERROR(1, "Error"),
+    INFO(2, "Information");
 
     private Integer code;
     private String description;
@@ -18,12 +21,15 @@ public enum AuditType {
         this.description = description;
     }
 
-    public static AuditType fromCode(Integer code) {
+    public static AuditType fromCode(Integer code) throws EnumNotFoundException {
         if (code == null) {
-            return null;
+            throw new EnumNotFoundException("You should enter a valid argument in order to calculate the enum field.");
         }
 
-        return Arrays.stream(AuditType.values()).filter(auditType -> auditType.getCode().equals(code)).findFirst().orElse(null);
+        return Arrays.stream(AuditType.values())
+                .filter(auditType -> auditType.getCode().equals(code))
+                .findFirst()
+                .orElseThrow(() -> new EnumNotFoundException("The code " + code + " doesn't belong to any constant."));
     }
 
     public Integer getCode() {
