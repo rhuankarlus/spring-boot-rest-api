@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 
 /**
- * Aspect to log everything happening along the API
+ * Aspect to LOGGER everything happening along the API
  *
  * @author Rhuan Karlus
  * @since 15/03/19
@@ -20,12 +20,13 @@ import java.util.Arrays;
 @Aspect
 public class LoggingAspect {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
 
     /**
      * Pointcut that matches all repositories, services and Web REST endpoints.
      */
-    @Pointcut("within(@org.springframework.stereotype.Repository *)" +
+    @Pointcut("within(@org.springframework.stereotype.Component *)" +
+            " || within(@org.springframework.stereotype.Repository *)" +
             " || within(@org.springframework.stereotype.Service *)" +
             " || within(@org.springframework.web.bind.annotation.RestController *)")
     public void springBeanPointcut() {
@@ -46,7 +47,7 @@ public class LoggingAspect {
      */
     @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        log.error("Exception in {}.{}() with cause = \'{}\' and exception = \'{}\'", joinPoint.getSignature().getDeclaringTypeName(),
+        LOGGER.error("Exception in {}.{}() with cause = \'{}\' and exception = \'{}\'", joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL", e.getMessage(), e);
     }
 
@@ -59,19 +60,20 @@ public class LoggingAspect {
      */
     @Around("applicationPackagePointcut() && springBeanPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        if (log.isDebugEnabled()) {
-            log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
                     joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
         }
+
         try {
             Object result = joinPoint.proceed();
-            if (log.isDebugEnabled()) {
-                log.debug("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(),
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(),
                         joinPoint.getSignature().getName(), result);
             }
             return result;
         } catch (IllegalArgumentException e) {
-            log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
+            LOGGER.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
                     joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
 
             throw e;
