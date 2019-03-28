@@ -28,22 +28,6 @@ public abstract class AbstractStringFieldSpecification<E extends ProjectEntity> 
             case EQ:
                 return criteriaBuilder.equal(root.get(getCriteria().getField()), getCriteria().getValue());
 
-            case GT:
-                return criteriaBuilder.greaterThan(
-                        root.get(getCriteria().getField()), getCriteria().getValue());
-
-            case GTE:
-                return criteriaBuilder.greaterThanOrEqualTo(
-                        root.get(getCriteria().getField()), getCriteria().getValue());
-
-            case LT:
-                return criteriaBuilder.lessThan(
-                        root.get(getCriteria().getField()), getCriteria().getValue());
-
-            case LTE:
-                return criteriaBuilder.lessThanOrEqualTo(
-                        root.get(getCriteria().getField()), getCriteria().getValue());
-
             case LK:
                 return criteriaBuilder.like(
                         root.get(getCriteria().getField()), "%" + getCriteria().getValue() + "%");

@@ -7,26 +7,6 @@ package br.com.rk.repositories.specifications.string;
 public enum Operation {
 
     /**
-     * Less than operation
-     */
-    LT,
-
-    /**
-     * Less than or equals operation
-     */
-    LTE,
-
-    /**
-     * Greater than operation
-     */
-    GT,
-
-    /**
-     * Greater than or equals operation
-     */
-    GTE,
-
-    /**
      * Equals operation
      */
     EQ,
