@@ -2,8 +2,10 @@ package br.com.rk.controller.audit.converters;
 
 import br.com.rk.controller.audit.dto.AuditDTO;
 import br.com.rk.converters.Conversor;
+import br.com.rk.converters.ConverterException;
 import br.com.rk.entities.audit.Audit;
 import br.com.rk.entities.audit.AuditType;
+import br.com.rk.exceptions.EnumNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -17,11 +19,16 @@ import java.time.ZoneId;
 public class AuditConversor implements Conversor<AuditDTO, Audit> {
 
     @Override
-    public Audit toEntity(final AuditDTO dto) {
+    public Audit toEntity(final AuditDTO dto) throws ConverterException {
         final Audit audit = new Audit();
         audit.setUrl(dto.getUrl());
         audit.setContent(dto.getContent());
-        audit.setType(AuditType.fromCode(dto.getType()));
+
+        try {
+            audit.setType(AuditType.fromCode(dto.getType()));
+        } catch (EnumNotFoundException e) {
+            throw new ConverterException("Error when trying to convert AuditType code.", e);
+        }
 
         if (dto.getDateTime() != null) {
             audit.setDateTime(Instant.ofEpochMilli(dto.getDateTime()).atZone(ZoneId.systemDefault()).toLocalDateTime());

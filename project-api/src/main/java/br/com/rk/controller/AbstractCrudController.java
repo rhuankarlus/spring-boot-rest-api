@@ -3,6 +3,7 @@ package br.com.rk.controller;
 import br.com.rk.controller.dto.DTO;
 import br.com.rk.controller.dto.ProjectResponse;
 import br.com.rk.converters.Conversor;
+import br.com.rk.converters.ConverterException;
 import br.com.rk.entities.ProjectEntity;
 import br.com.rk.services.ProjectCrudService;
 import br.com.rk.services.exception.ServiceException;
@@ -13,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,8 +60,12 @@ public abstract class AbstractCrudController<D extends DTO, E extends ProjectEnt
         return ResponseEntity.ok().build();
     }
 
-    protected ProjectResponse convertPage(final Page<E> page) {
-        final List<D> dtos = page.getContent().stream().map(conversor::toDTO).collect(Collectors.toList());
+    protected ProjectResponse convertPage(final Page<E> page) throws ConverterException {
+        final List<D> dtos = new ArrayList<>();
+        for (final E entity : page.getContent()) {
+            dtos.add(conversor.toDTO(entity));
+        }
+
         final ProjectResponse.Pagination pagination = new ProjectResponse.Pagination(
                 page.getNumber(),
                 page.getSize(),
