@@ -14,6 +14,7 @@
         <module>project-api</module>
         <module>project-services</module>
         <module>project-repositories</module>
+        <module>project-basics</module>
     </modules>
 
     <properties>
@@ -232,6 +233,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- Projeto -->
+            <dependency>
+                <groupId>br.com.rk</groupId>
+                <artifactId>project-basics</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>br.com.rk</groupId>
                 <artifactId>project-entities</artifactId>
