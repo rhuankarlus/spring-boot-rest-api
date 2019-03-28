@@ -1,6 +1,9 @@
 package br.com.rk.entities.converters;
 
 import br.com.rk.entities.audit.AuditType;
+import br.com.rk.exceptions.EnumNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -12,6 +15,8 @@ import javax.persistence.Converter;
 @Converter(autoApply = true)
 public class AuditTypeConverter implements AttributeConverter<AuditType, Integer> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuditTypeConverter.class);
+
     @Override
     public Integer convertToDatabaseColumn(AuditType auditType) {
         return auditType.getCode();
@@ -19,7 +24,12 @@ public class AuditTypeConverter implements AttributeConverter<AuditType, Integer
 
     @Override
     public AuditType convertToEntityAttribute(Integer code) {
-        return AuditType.fromCode(code);
+        try {
+            return AuditType.fromCode(code);
+        } catch (EnumNotFoundException e) {
+            LOGGER.error("Error trying to convert code {} to entity attribute.", code, e);
+            return null;
+        }
     }
 
 }
