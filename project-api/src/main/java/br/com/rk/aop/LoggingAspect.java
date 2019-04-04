@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 
 /**
- * Aspect to LOGGER everything happening along the API
+ * Aspect to log everything happening along the API
  *
  * @author Rhuan Karlus
  * @since 15/03/19
