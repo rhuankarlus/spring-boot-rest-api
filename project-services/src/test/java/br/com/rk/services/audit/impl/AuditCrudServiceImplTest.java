@@ -1,7 +1,6 @@
 package br.com.rk.services.audit.impl;
 
-import br.com.rk.entities.audit.AuditType;
-import br.com.rk.exceptions.EnumNotFoundException;
+import br.com.rk.entities.audit.Audit;
 import br.com.rk.services.exception.ServiceException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,6 +29,14 @@ public class AuditCrudServiceImplTest {
         exceptionRule.expectMessage("The audit object can't be null.");
 
         sut.validateParams(null, null);
+    }
+
+    @Test
+    public void should_throw_exception_when_pageable_is_null() throws ServiceException {
+        exceptionRule.expect(ServiceException.class);
+        exceptionRule.expectMessage("The pageable object can't be null.");
+
+        sut.validateParams(new Audit(), null);
     }
 
 }
