@@ -28,10 +28,10 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
     @Override
     public E findById(Long id) throws ServiceException {
         if (id == null) {
-            throw new ServiceException("O ID informado não pode ser nulo.");
+            throw new ServiceException("The ID can't be null.");
         }
 
-        return projectRepository.findById(id).orElseThrow(() -> new ServiceException("ProjectEntity com ID " + id + " não encontrada."));
+        return projectRepository.findById(id).orElseThrow(() -> new ServiceException("Entity with ID " + id + " not found."));
     }
 
     @Override
