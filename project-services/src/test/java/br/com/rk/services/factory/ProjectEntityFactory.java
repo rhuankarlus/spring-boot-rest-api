@@ -8,6 +8,10 @@ import br.com.rk.entities.ProjectEntity;
  */
 public class ProjectEntityFactory {
 
+    public static ProjectEntity buildSimpleEntityWithoutId() {
+        return buildSimpleEntityWithId(null);
+    }
+
     public static ProjectEntity buildSimpleEntityWithId(final Long id) {
         final ProjectEntity projectEntity = new ProjectEntity() {
             private Long id;

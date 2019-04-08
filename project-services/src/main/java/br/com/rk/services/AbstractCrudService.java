@@ -36,6 +36,10 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
 
     @Override
     public E persist(E entidade) throws ServiceException {
+        if (entidade == null) {
+            throw new ServiceException("The entity shouldn't be null.");
+        }
+
         try {
             return projectRepository.save(entidade);
         } catch (Exception e) {

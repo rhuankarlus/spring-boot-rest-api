@@ -80,4 +80,52 @@ public class AbstractCrudServiceTest {
         assertEquals("It should return the entity with id " + id, id, sut.findById(id).getId());
     }
 
+    @Test
+    public void should_throw_exception_when_entity_to_persist_is_null() throws ServiceException {
+        exceptionRule.expect(ServiceException.class);
+        exceptionRule.expectMessage("The entity shouldn't be null.");
+
+        doCallRealMethod()
+                .when(sut)
+                .persist(any());
+
+        sut.persist(null);
+    }
+
+    @Test
+    public void should_throw_exception_when_persist_entity_throws_exception() throws ServiceException {
+        exceptionRule.expect(ServiceException.class);
+        exceptionRule.expectMessage("Error trying to persist entity");
+
+        final ProjectEntity projectEntity = ProjectEntityFactory.buildSimpleEntityWithId(1L);
+        final ProjectRepository mockRepo = mock(ProjectRepository.class);
+        when(mockRepo.save(projectEntity)).thenThrow(Exception.class);
+        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+
+        doCallRealMethod()
+                .when(sut)
+                .persist(projectEntity);
+
+        sut.persist(projectEntity);
+    }
+
+    @Test
+    public void should_return_correct_entity_when_persist() throws ServiceException {
+        final Long id = 1L;
+
+        final ProjectEntity projectEntity = ProjectEntityFactory.buildSimpleEntityWithoutId();
+        final ProjectEntity projectEntityWithId = ProjectEntityFactory.buildSimpleEntityWithId(id);
+
+        final ProjectRepository mockRepo = mock(ProjectRepository.class);
+        when(mockRepo.save(projectEntity)).thenReturn(projectEntityWithId);
+        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+
+        doCallRealMethod()
+                .when(sut)
+                .persist(projectEntity);
+
+        assertNotNull("It shouldn't return a null entity.", sut.persist(projectEntity));
+        assertEquals("It should return the entity with id " + id, id, sut.persist(projectEntity).getId());
+    }
+
 }
