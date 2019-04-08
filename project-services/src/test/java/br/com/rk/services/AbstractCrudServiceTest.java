@@ -49,8 +49,8 @@ public class AbstractCrudServiceTest {
         final Long id = 1L;
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
         when(mockRepo.findById(id)).thenReturn(Optional.empty());
+        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
 
         doCallRealMethod()
                 .when(sut)

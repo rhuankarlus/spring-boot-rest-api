@@ -39,7 +39,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
         try {
             return projectRepository.save(entidade);
         } catch (Exception e) {
-            throw new ServiceException("Erro ao tentar persistir a entidade", e);
+            throw new ServiceException("Error trying to persist entity", e);
         }
     }
 
@@ -48,7 +48,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
         try {
             projectRepository.deleteById(id);
         } catch (Exception e) {
-            throw new ServiceException("Erro ao tentar deletar a entidade", e);
+            throw new ServiceException("Error trying to delete the entity", e);
         }
     }
 
@@ -57,7 +57,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
         try {
             return projectRepository.findAll();
         } catch (Exception e) {
-            throw new ServiceException("Erro ao tentar ler a lista de entidades do banco", e);
+            throw new ServiceException("Error when trying to read the entities list from database", e);
         }
     }
 
@@ -66,7 +66,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
         try {
             return projectRepository.findAll(paginador);
         } catch (Exception e) {
-            throw new ServiceException("Erro ao tentar ler a página de entidades do banco", e);
+            throw new ServiceException("Error when trying to read the entities page from database", e);
         }
     }
 
