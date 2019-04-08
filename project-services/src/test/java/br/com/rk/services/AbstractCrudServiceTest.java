@@ -1,7 +1,9 @@
 package br.com.rk.services;
 
+import br.com.rk.entities.ProjectEntity;
 import br.com.rk.repositories.ProjectRepository;
 import br.com.rk.services.exception.ServiceException;
+import br.com.rk.services.factory.ProjectEntityFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,6 +12,8 @@ import org.mockito.internal.util.reflection.Whitebox;
 
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 /**
@@ -57,6 +61,23 @@ public class AbstractCrudServiceTest {
                 .findById(id);
 
         sut.findById(id);
+    }
+
+    @Test
+    public void should_return_correct_entity_by_id() throws ServiceException {
+        final Long id = 1L;
+        final ProjectEntity projectEntity = ProjectEntityFactory.buildSimpleEntityWithId(id);
+
+        final ProjectRepository mockRepo = mock(ProjectRepository.class);
+        when(mockRepo.findById(id)).thenReturn(Optional.of(projectEntity));
+        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+
+        doCallRealMethod()
+                .when(sut)
+                .findById(id);
+
+        assertNotNull("It shouldn't return null entity.", sut.findById(id));
+        assertEquals("It should return the entity with id " + id, id, sut.findById(id).getId());
     }
 
 }
