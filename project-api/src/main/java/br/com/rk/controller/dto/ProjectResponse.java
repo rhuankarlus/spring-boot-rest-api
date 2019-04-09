@@ -1,6 +1,8 @@
 package br.com.rk.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -10,12 +12,27 @@ import org.springframework.data.domain.Sort;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectResponse {
 
-    private Metadata headers;
+    private Metadata metadata;
     private Object content;
     private Pagination pagination;
 
-    public class Metadata {
+    public static class Metadata {
 
+        private final int errorCode;
+        private final String errorDescription;
+
+        public Metadata(int errorCode, String errorDescription) {
+            this.errorCode = errorCode;
+            this.errorDescription = errorDescription;
+        }
+
+        public int getErrorCode() {
+            return errorCode;
+        }
+
+        public String getErrorDescription() {
+            return errorDescription;
+        }
     }
 
     public static class Pagination {
@@ -55,28 +72,53 @@ public class ProjectResponse {
         }
     }
 
-    public static ProjectResponse of(final Object content) {
+    public static ProjectResponse ok(final Object content) {
         return of(null, content, null);
     }
 
-    public static ProjectResponse of(final Metadata metadata, final Object content) {
-        return of(metadata, content, null);
+    public static ProjectResponse ok(final Object content, final Page<?> page) {
+        return of(null, content, page);
     }
 
-    public static ProjectResponse of(final Metadata metadata, final Object content, final Pagination pagination) {
+    public static ProjectResponse error(int errorCode, String errorDescription) {
+        return error(errorCode, errorDescription, null);
+    }
+
+    public static ProjectResponse error(int errorCode, String errorDescription, final Object content) {
+        return of(new Metadata(errorCode, errorDescription), content, null);
+    }
+
+    public static ProjectResponse of(final Metadata metadata, final Object content, final Page<?> page) {
         final ProjectResponse projectResponse = new ProjectResponse();
-        projectResponse.headers = metadata;
+        projectResponse.metadata = metadata;
         projectResponse.content = content;
-        projectResponse.pagination = pagination;
+        projectResponse.pagination = convertToPagination(page);
         return projectResponse;
     }
 
-    public Metadata getHeaders() {
-        return headers;
+    public static ProjectResponse of(int errorCode, String errorDescription, final Object content, final Page<?> page) {
+        final ProjectResponse projectResponse = new ProjectResponse();
+        projectResponse.metadata = new Metadata(errorCode, errorDescription);
+        projectResponse.content = content;
+        projectResponse.pagination = convertToPagination(page);
+        return projectResponse;
     }
 
-    public void setHeaders(Metadata headers) {
-        this.headers = headers;
+    private static Pagination convertToPagination(final Page<?> page) {
+        return new Pagination(
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getContent().size(),
+                page.getSort());
+    }
+
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 
     public Object getContent() {
