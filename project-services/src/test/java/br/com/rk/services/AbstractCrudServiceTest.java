@@ -34,18 +34,6 @@ public class AbstractCrudServiceTest {
     }
 
     @Test
-    public void should_throw_exception_when_id_is_null() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("The ID can't be null.");
-
-        doCallRealMethod()
-                .when(sut)
-                .findById(anyLong());
-
-        sut.findById(null);
-    }
-
-    @Test
     public void should_throw_exception_when_entity_not_found() throws ServiceException {
         exceptionRule.expect(ServiceException.class);
         exceptionRule.expectMessage("Entity with ID 1 not found.");
