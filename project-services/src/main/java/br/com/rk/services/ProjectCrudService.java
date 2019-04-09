@@ -49,11 +49,11 @@ public interface ProjectCrudService<E extends ProjectEntity> {
     /**
      * Encontra todas as entidades paginando de acordo com o objeto
      *
-     * @param paginador Objeto de paginação do framework
+     * @param pageable Objeto de paginação do framework
      * @return A página de entidades encontrada
      * @throws ServiceException Caso ocorra algum erro durante a busca
      */
-    Page<E> findAll(Pageable paginador) throws ServiceException;
+    Page<E> findAll(Pageable pageable) throws ServiceException;
 
     /**
      * Search for every {@code entity} by the example

@@ -62,9 +62,13 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
     }
 
     @Override
-    public Page<E> findAll(Pageable paginador) throws ServiceException {
+    public Page<E> findAll(final Pageable pageable) throws ServiceException {
+        if (pageable == null) {
+            throw new ServiceException("Can't find page with a null paginator.");
+        }
+
         try {
-            return projectRepository.findAll(paginador);
+            return projectRepository.findAll(pageable);
         } catch (Exception e) {
             throw new ServiceException("Error when trying to read the entities page from database", e);
         }
