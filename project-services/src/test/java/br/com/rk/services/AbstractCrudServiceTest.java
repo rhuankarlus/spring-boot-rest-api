@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.internal.util.reflection.Whitebox;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -144,7 +145,7 @@ public class AbstractCrudServiceTest {
 
         sut.delete(id);
 
-        verify(mockRepo).deleteById(id);
+        verify(mockRepo, times(1)).deleteById(id);
     }
 
     @Test
@@ -161,7 +162,46 @@ public class AbstractCrudServiceTest {
 
         sut.delete(id);
 
-        verify(mockRepo).deleteById(id);
+        verify(mockRepo, times(1)).deleteById(id);
+    }
+
+    @Test
+    public void should_throw_exception_when_find_all_fail() throws ServiceException {
+        exceptionRule.expect(ServiceException.class);
+        exceptionRule.expectMessage("Error when trying to read the entities list from database");
+
+        final ProjectRepository mockRepo = mock(ProjectRepository.class);
+        when(mockRepo.findAll()).thenThrow(Exception.class);
+        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+
+        doCallRealMethod()
+                .when(sut)
+                .findAll();
+
+        sut.findAll();
+
+        verify(mockRepo, times(1)).findAll();
+    }
+
+    @Test
+    public void should_return_result_list_when_find_all_execute_correctly() throws ServiceException {
+        final int listSize = 5;
+        final List<ProjectEntity> projectEntityList = ProjectEntityFactory.buildSimpleListWithoutId(listSize);
+
+        final ProjectRepository mockRepo = mock(ProjectRepository.class);
+        when(mockRepo.findAll()).thenReturn(projectEntityList);
+        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+
+        doCallRealMethod()
+                .when(sut)
+                .findAll();
+
+        final List<ProjectEntity> returnedProjectEntityList = sut.findAll();
+
+        assertNotNull("It shouldn't returned a null list", returnedProjectEntityList);
+        assertEquals("It should return " + listSize + " elements in the list.", listSize, returnedProjectEntityList.size());
+
+        verify(mockRepo, times(1)).findAll();
     }
 
 }

@@ -2,6 +2,9 @@ package br.com.rk.services.factory;
 
 import br.com.rk.entities.ProjectEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Rhuan Karlus
  * @since 08/04/19
@@ -31,4 +34,12 @@ public class ProjectEntityFactory {
         return projectEntity;
     }
 
+    public static List<ProjectEntity> buildSimpleListWithoutId(final int size) {
+        final List<ProjectEntity> projectEntityList = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            projectEntityList.add(buildSimpleEntityWithoutId());
+        }
+
+        return projectEntityList;
+    }
 }
