@@ -38,7 +38,7 @@ public class AbstractCrudServiceTest {
         exceptionRule.expect(ServiceException.class);
         exceptionRule.expectMessage("Entity with ID 1 not found.");
 
-        final Long id = 1L;
+        final long id = 1L;
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findById(id)).thenReturn(Optional.empty());
@@ -53,7 +53,7 @@ public class AbstractCrudServiceTest {
 
     @Test
     public void should_return_correct_entity_by_id() throws ServiceException {
-        final Long id = 1L;
+        final long id = 1L;
         final ProjectEntity projectEntity = ProjectEntityFactory.buildSimpleEntityWithId(id);
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
@@ -65,7 +65,7 @@ public class AbstractCrudServiceTest {
                 .findById(id);
 
         assertNotNull("It shouldn't return null entity.", sut.findById(id));
-        assertEquals("It should return the entity with id " + id, id, sut.findById(id).getId());
+        assertEquals("It should return the entity with id " + id, Long.valueOf(id), sut.findById(id).getId());
     }
 
     @Test
@@ -114,6 +114,42 @@ public class AbstractCrudServiceTest {
 
         assertNotNull("It shouldn't return a null entity.", sut.persist(projectEntity));
         assertEquals("It should return the entity with id " + id, id, sut.persist(projectEntity).getId());
+    }
+
+    @Test
+    public void should_throw_exception_when_delete_fail() throws ServiceException {
+        exceptionRule.expect(ServiceException.class);
+        exceptionRule.expectMessage("Error trying to delete the entity");
+
+        final long id = 1L;
+        final ProjectRepository mockRepo = mock(ProjectRepository.class);
+        doThrow(Exception.class).when(mockRepo).deleteById(isA(Long.class));
+        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+
+        doCallRealMethod()
+                .when(sut)
+                .delete(id);
+
+        sut.delete(id);
+
+        verify(mockRepo).deleteById(id);
+    }
+
+    @Test
+    public void should_delete_entity_correctly() throws ServiceException {
+        final long id = 1L;
+
+        final ProjectRepository mockRepo = mock(ProjectRepository.class);
+        doNothing().when(mockRepo).deleteById(id);
+        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+
+        doCallRealMethod()
+                .when(sut)
+                .delete(id);
+
+        sut.delete(id);
+
+        verify(mockRepo).deleteById(id);
     }
 
 }
