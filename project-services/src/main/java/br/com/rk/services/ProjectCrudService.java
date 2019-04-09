@@ -21,7 +21,7 @@ public interface ProjectCrudService<E extends ProjectEntity> {
      * @throws ServiceException caso nenhuma entidade com o ID informado tenha sido encontrada ou haja algum erro
      *                          durante a busca pela entidade
      */
-    E findById(Long id) throws ServiceException;
+    E findById(long id) throws ServiceException;
 
     /**
      * Persiste os dados de uma entidade no banco
@@ -38,7 +38,7 @@ public interface ProjectCrudService<E extends ProjectEntity> {
      * @param id ID da entidade que será removida
      * @throws ServiceException Caso ocorra algum erro durante a remoção da entidade
      */
-    void delete(Long id) throws ServiceException;
+    void delete(long id) throws ServiceException;
 
     /**
      * @return Todas as entidades desse tipo. <b>CUIDADO AO USAR ESSE MÉTODO, PODE DEGRADAR MUITO A PERFORMANCE!</b>
