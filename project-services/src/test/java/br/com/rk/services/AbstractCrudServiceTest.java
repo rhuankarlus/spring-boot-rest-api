@@ -49,6 +49,8 @@ public class AbstractCrudServiceTest {
                 .findById(id);
 
         sut.findById(id);
+
+        verify(mockRepo, times(1)).findById(id);
     }
 
     @Test
@@ -64,8 +66,12 @@ public class AbstractCrudServiceTest {
                 .when(sut)
                 .findById(id);
 
-        assertNotNull("It shouldn't return null entity.", sut.findById(id));
-        assertEquals("It should return the entity with id " + id, Long.valueOf(id), sut.findById(id).getId());
+        final ProjectEntity returnedProjectEntity = sut.findById(id);
+
+        assertNotNull("It shouldn't return null entity.", returnedProjectEntity);
+        assertEquals("It should return the entity with id " + id, Long.valueOf(id), returnedProjectEntity.getId());
+
+        verify(mockRepo, times(1)).findById(id);
     }
 
     @Test
@@ -95,6 +101,8 @@ public class AbstractCrudServiceTest {
                 .persist(projectEntity);
 
         sut.persist(projectEntity);
+
+        verify(mockRepo, times(1)).save(projectEntity);
     }
 
     @Test
@@ -112,8 +120,12 @@ public class AbstractCrudServiceTest {
                 .when(sut)
                 .persist(projectEntity);
 
-        assertNotNull("It shouldn't return a null entity.", sut.persist(projectEntity));
-        assertEquals("It should return the entity with id " + id, id, sut.persist(projectEntity).getId());
+        final ProjectEntity returnedProjectEntity = sut.persist(projectEntity);
+
+        assertNotNull("It shouldn't return a null entity.", returnedProjectEntity);
+        assertEquals("It should return the entity with id " + id, id, returnedProjectEntity.getId());
+
+        verify(mockRepo, times(1)).save(projectEntity);
     }
 
     @Test
