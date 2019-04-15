@@ -1,5 +1,6 @@
 package br.com.rk.controller.audit;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,13 +16,14 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuditCrudControllerTest {
 
-    private final WebApplicationContext webApplicationContext;
-    private final TestRestTemplate restTemplate;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     @Autowired
-    public AuditCrudControllerTest(WebApplicationContext webApplicationContext, TestRestTemplate restTemplate) {
-        this.webApplicationContext = webApplicationContext;
-        this.restTemplate = restTemplate;
+    private TestRestTemplate restTemplate;
+
+    @Test
+    public void test() {
     }
 
 }

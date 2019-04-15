@@ -1,6 +1,5 @@
 package br.com.rk.controller;
 
-import br.com.rk.controller.dto.ProjectResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EnableSpringDataWebSupport
 public abstract class AbstractControllerTest {
 
-    private static final String RESPONSE_CONTENT_NODE = "content";
     private static final String PAGE_HEADER = "page";
     private static final String PAGE_SIZE_HEADER = "size";
 
     @Autowired
-    private MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
     protected String doGetExpectStatus(final String url, final HttpStatus status) throws Exception {
         return doGetExpectStatus(url, null, status, null, null);
@@ -47,7 +45,6 @@ public abstract class AbstractControllerTest {
                         .andReturn()
                         .getResponse()
                         .getContentAsString())
-                .get(RESPONSE_CONTENT_NODE)
                 .toString();
     }
 
@@ -64,16 +61,15 @@ public abstract class AbstractControllerTest {
                         .andReturn()
                         .getResponse()
                         .getContentAsString())
-                .get(RESPONSE_CONTENT_NODE)
                 .toString();
     }
 
-    public String projectResponseJson(final Object content) {
-        return asJsonString(ProjectResponse.ok(content));
+    protected MultiValueMap<String, String> insertPageData() {
+        return insertPageData(null, null, null);
     }
 
-    private MultiValueMap<String, String> insertPageData(MultiValueMap<String, String> params, Integer page,
-                                                         Integer pageSize) {
+    protected MultiValueMap<String, String> insertPageData(MultiValueMap<String, String> params, Integer page,
+                                                           Integer pageSize) {
         if (params == null) {
             params = new HttpHeaders();
         }

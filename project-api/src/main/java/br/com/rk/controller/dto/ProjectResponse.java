@@ -42,11 +42,24 @@ public class ProjectResponse {
         this.pagination = pagination;
     }
 
+    /**
+     * Simple implementation for errors
+     *
+     * @see <a href="https://www.baeldung.com/global-error-handler-in-a-spring-rest-api">
+     * https://www.baeldung.com/global-error-handler-in-a-spring-rest-api</a>
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Metadata {
 
         private HttpStatus status;
         private String message;
         private List<String> errors;
+
+        public Metadata(HttpStatus status, String message) {
+            super();
+            this.status = status;
+            this.message = message;
+        }
 
         public Metadata(HttpStatus status, String message, List<String> errors) {
             super();
@@ -87,6 +100,10 @@ public class ProjectResponse {
         }
     }
 
+    /**
+     * Show searchs pagination
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Pagination {
 
         private int pageNumber;
@@ -161,6 +178,10 @@ public class ProjectResponse {
 
     public static ProjectResponse error(HttpStatus status, String message, List<String> errors) {
         return of(new Metadata(status, message, errors), null, null);
+    }
+
+    public static ProjectResponse of(final Page<?> page) {
+        return of(null, page.getContent(), page);
     }
 
     public static ProjectResponse of(final Metadata metadata, final Object content, final Page<?> page) {
