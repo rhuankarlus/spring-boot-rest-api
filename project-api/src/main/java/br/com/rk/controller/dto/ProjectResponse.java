@@ -16,10 +16,36 @@ public class ProjectResponse {
     private Object content;
     private Pagination pagination;
 
+    public ProjectResponse() {
+    }
+
+    public ProjectResponse(Object content) {
+        this.content = content;
+    }
+
+    public ProjectResponse(Metadata metadata, Object content) {
+        this.metadata = metadata;
+        this.content = content;
+    }
+
+    public ProjectResponse(Object content, Pagination pagination) {
+        this.content = content;
+        this.pagination = pagination;
+    }
+
+    public ProjectResponse(Metadata metadata, Object content, Pagination pagination) {
+        this.metadata = metadata;
+        this.content = content;
+        this.pagination = pagination;
+    }
+
     public static class Metadata {
 
-        private final int errorCode;
-        private final String errorDescription;
+        private int errorCode;
+        private String errorDescription;
+
+        public Metadata() {
+        }
 
         public Metadata(int errorCode, String errorDescription) {
             this.errorCode = errorCode;
@@ -33,15 +59,26 @@ public class ProjectResponse {
         public String getErrorDescription() {
             return errorDescription;
         }
+
+        public void setErrorCode(int errorCode) {
+            this.errorCode = errorCode;
+        }
+
+        public void setErrorDescription(String errorDescription) {
+            this.errorDescription = errorDescription;
+        }
     }
 
     public static class Pagination {
 
-        private final int pageNumber;
-        private final int elementsInPage;
-        private final long totalElements;
-        private final int totalPages;
-        private final Sort sort;
+        private int pageNumber;
+        private int elementsInPage;
+        private long totalElements;
+        private int totalPages;
+        private Sort sort;
+
+        public Pagination() {
+        }
 
         public Pagination(int pageNumber, int elementsInPage, long totalElements, int totalPages, Sort sort) {
             this.pageNumber = pageNumber;
@@ -69,6 +106,26 @@ public class ProjectResponse {
 
         public Sort getSort() {
             return sort;
+        }
+
+        public void setPageNumber(int pageNumber) {
+            this.pageNumber = pageNumber;
+        }
+
+        public void setElementsInPage(int elementsInPage) {
+            this.elementsInPage = elementsInPage;
+        }
+
+        public void setTotalElements(long totalElements) {
+            this.totalElements = totalElements;
+        }
+
+        public void setTotalPages(int totalPages) {
+            this.totalPages = totalPages;
+        }
+
+        public void setSort(Sort sort) {
+            this.sort = sort;
         }
     }
 
@@ -105,6 +162,10 @@ public class ProjectResponse {
     }
 
     private static Pagination convertToPagination(final Page<?> page) {
+        if (page == null) {
+            return null;
+        }
+
         return new Pagination(
                 page.getNumber(),
                 page.getSize(),
