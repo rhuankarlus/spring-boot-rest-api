@@ -2,8 +2,11 @@ package br.com.rk.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Rhuan Karlus
@@ -41,31 +44,46 @@ public class ProjectResponse {
 
     public static class Metadata {
 
-        private int errorCode;
-        private String errorDescription;
+        private HttpStatus status;
+        private String message;
+        private List<String> errors;
 
-        public Metadata() {
+        public Metadata(HttpStatus status, String message, List<String> errors) {
+            super();
+            this.status = status;
+            this.message = message;
+            this.errors = errors;
         }
 
-        public Metadata(int errorCode, String errorDescription) {
-            this.errorCode = errorCode;
-            this.errorDescription = errorDescription;
+        public Metadata(HttpStatus status, String message, String error) {
+            super();
+            this.status = status;
+            this.message = message;
+            errors = Collections.singletonList(error);
         }
 
-        public int getErrorCode() {
-            return errorCode;
+        public HttpStatus getStatus() {
+            return status;
         }
 
-        public String getErrorDescription() {
-            return errorDescription;
+        public void setStatus(HttpStatus status) {
+            this.status = status;
         }
 
-        public void setErrorCode(int errorCode) {
-            this.errorCode = errorCode;
+        public String getMessage() {
+            return message;
         }
 
-        public void setErrorDescription(String errorDescription) {
-            this.errorDescription = errorDescription;
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public List<String> getErrors() {
+            return errors;
+        }
+
+        public void setErrors(List<String> errors) {
+            this.errors = errors;
         }
     }
 
@@ -137,25 +155,17 @@ public class ProjectResponse {
         return of(null, content, page);
     }
 
-    public static ProjectResponse error(int errorCode, String errorDescription) {
-        return error(errorCode, errorDescription, null);
+    public static ProjectResponse error(HttpStatus status, String message) {
+        return error(status, message, null);
     }
 
-    public static ProjectResponse error(int errorCode, String errorDescription, final Object content) {
-        return of(new Metadata(errorCode, errorDescription), content, null);
+    public static ProjectResponse error(HttpStatus status, String message, List<String> errors) {
+        return of(new Metadata(status, message, errors), null, null);
     }
 
     public static ProjectResponse of(final Metadata metadata, final Object content, final Page<?> page) {
         final ProjectResponse projectResponse = new ProjectResponse();
         projectResponse.metadata = metadata;
-        projectResponse.content = content;
-        projectResponse.pagination = convertToPagination(page);
-        return projectResponse;
-    }
-
-    public static ProjectResponse of(int errorCode, String errorDescription, final Object content, final Page<?> page) {
-        final ProjectResponse projectResponse = new ProjectResponse();
-        projectResponse.metadata = new Metadata(errorCode, errorDescription);
         projectResponse.content = content;
         projectResponse.pagination = convertToPagination(page);
         return projectResponse;
