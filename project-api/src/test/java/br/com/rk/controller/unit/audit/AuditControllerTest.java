@@ -4,6 +4,7 @@ import br.com.rk.controller.audit.AuditController;
 import br.com.rk.controller.audit.dto.AuditDTO;
 import br.com.rk.controller.dto.ProjectResponse;
 import br.com.rk.controller.unit.AbstractCrudControllerTest;
+import br.com.rk.converters.ConverterException;
 import br.com.rk.entities.audit.Audit;
 import br.com.rk.entities.audit.AuditType;
 import br.com.rk.services.exception.ServiceException;
@@ -45,6 +46,22 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
     }
 
     @Test
+    public void should_return_error_500_when_converter_throw_exception_on_convert_to_dto() throws Exception {
+        final String exceptionText = "Some creepy exception";
+
+        when(mockService.findAll(any(Pageable.class))).thenReturn(PageFactory.buildPage(5, () -> null));
+        when(mockConversor.toDTO(any())).thenThrow(new ConverterException(exceptionText));
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
+        final String findAllAuditResponse = doGetExpectStatus("/audit", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        JSONAssert.assertEquals(expectedError, findAllAuditResponse, false);
+
+        verify(mockService, times(1)).findAll(any(Pageable.class));
+        verify(mockConversor, times(1)).toDTO(any());
+    }
+
+    @Test
     public void should_find_all_paginated() throws Exception {
         final Audit audit = AuditEntityBuilder
                 .init()
@@ -68,8 +85,6 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         final String expectedResponse = asJsonString(
                 ProjectResponse.ok(Arrays.asList(auditDTO, auditDTO, auditDTO, auditDTO, auditDTO), auditPage));
         ProjectResponse.of(null, auditPage.getContent(), auditPage);
-
-//        createJsonStringArray(auditDTO, 5);
 
         JSONAssert.assertEquals(expectedResponse, getResponse, false);
 
