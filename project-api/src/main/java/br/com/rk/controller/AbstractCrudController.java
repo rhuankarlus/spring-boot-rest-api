@@ -36,7 +36,7 @@ public abstract class AbstractCrudController<D extends DTO, E extends ProjectEnt
 
     @PostMapping("/filter")
     @ResponseBody
-    public ResponseEntity<ProjectResponse> findAll(@RequestBody D dto, @PageableDefault final Pageable pageable) throws ServiceException {
+    public ResponseEntity<ProjectResponse> findAllByExample(@RequestBody D dto, @PageableDefault final Pageable pageable) throws ServiceException {
         return ResponseEntity.ok(convertPage(getService().findByExample(conversor.toEntity(dto), pageable)));
     }
 

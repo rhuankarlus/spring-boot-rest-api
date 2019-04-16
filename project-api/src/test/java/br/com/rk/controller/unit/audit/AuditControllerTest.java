@@ -9,7 +9,7 @@ import br.com.rk.entities.audit.Audit;
 import br.com.rk.entities.audit.AuditType;
 import br.com.rk.services.exception.ServiceException;
 import br.com.rk.util.PageFactory;
-import br.com.rk.util.builders.AuditEntityBuilder;
+import br.com.rk.util.builders.AuditBuilder;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 public class AuditControllerTest extends AbstractCrudControllerTest<Audit, AuditDTO> {
 
     @Test
-    public void should_return_error_500_when_service_throw_exception() throws Exception {
+    public void should_return_error_500_when_find_all_service_throw_exception() throws Exception {
         final String exceptionText = "Some creepy exception";
 
         when(mockService.findAll(any(Pageable.class))).thenThrow(new ServiceException(exceptionText));
@@ -46,7 +46,7 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
     }
 
     @Test
-    public void should_return_error_500_when_converter_throw_exception_on_convert_to_dto() throws Exception {
+    public void should_return_error_500_when_find_all_converter_throw_exception_on_convert_to_dto() throws Exception {
         final String exceptionText = "Some creepy exception";
 
         when(mockService.findAll(any(Pageable.class))).thenReturn(PageFactory.buildPage(5, () -> null));
@@ -63,8 +63,8 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
 
     @Test
     public void should_find_all_paginated() throws Exception {
-        final Audit audit = AuditEntityBuilder
-                .init()
+        final Audit audit = AuditBuilder
+                .initEntity()
                 .url("/someUrl/somePath/test")
                 .dateTime(LocalDateTime.now())
                 .type(AuditType.INFO)
@@ -92,4 +92,20 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         verify(mockConversor, times(5)).toDTO(any(Audit.class));
     }
 
+    //
+
+    @Test
+    public void should_return_error_500_when_find_all_by_example_service_throw_exception() throws Exception {
+        final String exceptionText = "Some creepy exception";
+
+        when(mockService.findByExample(any(Audit.class), any(Pageable.class))).thenThrow(new ServiceException(exceptionText));
+        when(mockConversor.toEntity(any(AuditDTO.class))).thenReturn(AuditBuilder.initEntity().build());
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
+        final String findAllAuditResponse = doPostExpectStatus("/audit/filter", HttpStatus.INTERNAL_SERVER_ERROR, AuditBuilder.initDTO().build());
+
+        JSONAssert.assertEquals(expectedError, findAllAuditResponse, false);
+
+        verify(mockService, times(1)).findByExample(any(Audit.class), any(Pageable.class));
+    }
 }

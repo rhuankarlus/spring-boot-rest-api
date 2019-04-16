@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @EnableSpringDataWebSupport
-@TestPropertySource(locations="classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.properties")
 public abstract class AbstractControllerTest {
 
     private static final String PAGE_HEADER = "page";
@@ -48,6 +48,10 @@ public abstract class AbstractControllerTest {
                         .getResponse()
                         .getContentAsString())
                 .toString();
+    }
+
+    protected String doPostExpectStatus(final String url, final HttpStatus status, final Object payload) throws Exception {
+        return doPostExpectStatus(url, new HttpHeaders(), status, payload);
     }
 
     protected String doPostExpectStatus(final String url, final MultiValueMap<String, String> params,
