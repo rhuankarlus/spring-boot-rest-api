@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 
 import static br.com.rk.util.json.JsonCreator.asJsonString;
@@ -72,11 +71,13 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
                 .content(null)
                 .build();
 
-        final AuditDTO auditDTO = new AuditDTO();
-        auditDTO.setUrl(audit.getUrl());
-        auditDTO.setType(audit.getType().getCode());
-        auditDTO.setDateTime(audit.getDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        auditDTO.setContent(audit.getContent());
+        final AuditDTO auditDTO = AuditBuilder
+                .initDTO()
+                .url(audit.getUrl())
+                .type(audit.getType())
+                .dateTime(audit.getDateTime())
+                .content(audit.getContent())
+                .build();
 
         final Page<Audit> auditPage = PageFactory.buildPage(5, () -> audit);
         when(mockService.findAll(any(Pageable.class))).thenReturn(auditPage);
@@ -150,11 +151,13 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
                 .content(null)
                 .build();
 
-        final AuditDTO auditDTO = new AuditDTO();
-        auditDTO.setUrl(audit.getUrl());
-        auditDTO.setType(audit.getType().getCode());
-        auditDTO.setDateTime(audit.getDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        auditDTO.setContent(audit.getContent());
+        final AuditDTO auditDTO = AuditBuilder
+                .initDTO()
+                .url(audit.getUrl())
+                .type(audit.getType())
+                .dateTime(audit.getDateTime())
+                .content(audit.getContent())
+                .build();
 
         final Page<Audit> auditPage = PageFactory.buildPage(5, () -> audit);
         when(mockConversor.toEntity(any(AuditDTO.class))).thenReturn(AuditBuilder.initEntity().build());
@@ -178,7 +181,7 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         final long entityId = 1L;
 
         when(mockService.findById(entityId)).thenThrow(new ServiceException(exceptionText));
-        when(mockConversor.toDTO(any(Audit.class))).thenReturn(AuditBuilder.initDTO().build());
+//        when(mockConversor.toDTO(any(Audit.class))).thenReturn(AuditBuilder.initDTO().build());
 
         final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
         final String findByIdAuditResponse = doGetExpectStatus("/audit/" + entityId, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -226,17 +229,20 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
 
         final Audit audit = AuditBuilder
                 .initEntity()
+                .id(entityId)
                 .url("/someUrl/somePath/test")
                 .dateTime(LocalDateTime.now())
                 .type(AuditType.INFO)
                 .content(null)
                 .build();
 
-        final AuditDTO auditDTO = new AuditDTO();
-        auditDTO.setUrl(audit.getUrl());
-        auditDTO.setType(audit.getType().getCode());
-        auditDTO.setDateTime(audit.getDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        auditDTO.setContent(audit.getContent());
+        final AuditDTO auditDTO = AuditBuilder
+                .initDTO()
+                .url(audit.getUrl())
+                .type(audit.getType())
+                .dateTime(audit.getDateTime())
+                .content(audit.getContent())
+                .build();
 
         when(mockService.findById(entityId)).thenReturn(audit);
         when(mockConversor.toDTO(audit)).thenReturn(auditDTO);
@@ -247,6 +253,93 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         JSONAssert.assertEquals(expectedResponse, getResponse, false);
 
         verify(mockService, times(1)).findById(entityId);
+        verify(mockConversor, times(1)).toDTO(audit);
+    }
+
+    @Test
+    public void should_return_error_500_when_persist_conversor_to_entity_throw_exception() throws Exception {
+        final String exceptionText = "Some creepy exception";
+
+        when(mockConversor.toEntity(any(AuditDTO.class))).thenThrow(new ConverterException(exceptionText));
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
+        final String putAuditResponse = doPutExpectStatus("/audit", HttpStatus.INTERNAL_SERVER_ERROR, AuditBuilder.initDTO().build());
+
+        JSONAssert.assertEquals(expectedError, putAuditResponse, false);
+
+        verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
+    }
+
+    @Test
+    public void should_return_error_500_when_persist_service_throw_exception() throws Exception {
+        final String exceptionText = "Some creepy exception";
+        final Audit audit = AuditBuilder.initEntity().build();
+        final AuditDTO auditDTO = AuditBuilder.initDTO().build();
+
+        when(mockConversor.toEntity(any(AuditDTO.class))).thenReturn(audit);
+        when(mockService.persist(any(Audit.class))).thenThrow(new ServiceException(exceptionText));
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
+        final String persistAuditResponse = doPutExpectStatus("/audit", HttpStatus.INTERNAL_SERVER_ERROR, auditDTO);
+
+        JSONAssert.assertEquals(expectedError, persistAuditResponse, false);
+
+        verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
+        verify(mockService, times(1)).persist(audit);
+    }
+
+    @Test
+    public void should_return_error_500_when_persist_conversor_throw_exception_to_dto() throws Exception {
+        final String exceptionText = "Some creepy exception";
+        final Audit audit = AuditBuilder.initEntity().build();
+        final AuditDTO auditDTO = AuditBuilder.initDTO().build();
+
+        when(mockConversor.toEntity(any(AuditDTO.class))).thenReturn(audit);
+        when(mockService.persist(any(Audit.class))).thenReturn(audit);
+        when(mockConversor.toDTO(any(Audit.class))).thenThrow(new ConverterException(exceptionText));
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
+        final String persistAuditResponse = doPutExpectStatus("/audit", HttpStatus.INTERNAL_SERVER_ERROR, auditDTO);
+
+        JSONAssert.assertEquals(expectedError, persistAuditResponse, false);
+
+        verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
+        verify(mockService, times(1)).persist(audit);
+        verify(mockConversor, times(1)).toDTO(audit);
+    }
+
+    @Test
+    public void should_return_entity_when_persist_return_successfull() throws Exception {
+        final long entityId = 1L;
+
+        final Audit audit = AuditBuilder
+                .initEntity()
+                .id(entityId)
+                .url("/someUrl/somePath/test")
+                .dateTime(LocalDateTime.now())
+                .type(AuditType.INFO)
+                .content(null)
+                .build();
+
+        final AuditDTO auditDTO = AuditBuilder
+                .initDTO()
+                .url(audit.getUrl())
+                .type(audit.getType())
+                .dateTime(audit.getDateTime())
+                .content(audit.getContent())
+                .build();
+
+        when(mockConversor.toEntity(any(AuditDTO.class))).thenReturn(audit);
+        when(mockService.persist(audit)).thenReturn(audit);
+        when(mockConversor.toDTO(audit)).thenReturn(auditDTO);
+
+        final String persistAuditResponse = doPutExpectStatus("/audit", HttpStatus.OK, auditDTO);
+        final String expectedResponse = asJsonString(ProjectResponse.ok(auditDTO));
+
+        JSONAssert.assertEquals(expectedResponse, persistAuditResponse, false);
+
+        verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
+        verify(mockService, times(1)).persist(audit);
         verify(mockConversor, times(1)).toDTO(audit);
     }
 

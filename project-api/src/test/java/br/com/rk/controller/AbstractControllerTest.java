@@ -15,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 import static br.com.rk.util.json.JsonCreator.asJsonString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,6 +60,26 @@ public abstract class AbstractControllerTest {
         return new ObjectMapper().readTree(
                 this.mockMvc
                         .perform(post(url)
+                                .params(params)
+                                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                .content(asJsonString(payload)))
+                        .andDo(print())
+                        .andExpect(status().is(status.value()))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString())
+                .toString();
+    }
+
+    protected String doPutExpectStatus(final String url, final HttpStatus status, final Object payload) throws Exception {
+        return doPutExpectStatus(url, new HttpHeaders(), status, payload);
+    }
+
+    protected String doPutExpectStatus(final String url, final MultiValueMap<String, String> params,
+                                       final HttpStatus status, final Object payload) throws Exception {
+        return new ObjectMapper().readTree(
+                this.mockMvc
+                        .perform(put(url)
                                 .params(params)
                                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                                 .content(asJsonString(payload)))
