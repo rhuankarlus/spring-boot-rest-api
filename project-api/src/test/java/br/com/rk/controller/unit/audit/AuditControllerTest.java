@@ -7,6 +7,7 @@ import br.com.rk.controller.unit.AbstractCrudControllerTest;
 import br.com.rk.converters.ConverterException;
 import br.com.rk.entities.audit.Audit;
 import br.com.rk.entities.audit.AuditType;
+import br.com.rk.services.exception.EntityNotFoundException;
 import br.com.rk.services.exception.ServiceException;
 import br.com.rk.util.PageFactory;
 import br.com.rk.util.builders.AuditBuilder;
@@ -98,9 +99,9 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         when(mockConversor.toEntity(any(AuditDTO.class))).thenThrow(new ConverterException(exceptionText));
 
         final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
-        final String findAllAuditResponse = doPostExpectStatus("/audit/filter", HttpStatus.INTERNAL_SERVER_ERROR, AuditBuilder.initDTO().build());
+        final String findByExampleAuditResponse = doPostExpectStatus("/audit/filter", HttpStatus.INTERNAL_SERVER_ERROR, AuditBuilder.initDTO().build());
 
-        JSONAssert.assertEquals(expectedError, findAllAuditResponse, false);
+        JSONAssert.assertEquals(expectedError, findByExampleAuditResponse, false);
 
         verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
     }
@@ -113,9 +114,9 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         when(mockService.findByExample(any(Audit.class), any(Pageable.class))).thenThrow(new ServiceException(exceptionText));
 
         final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
-        final String findAllAuditResponse = doPostExpectStatus("/audit/filter", HttpStatus.INTERNAL_SERVER_ERROR, AuditBuilder.initDTO().build());
+        final String findByExampleAuditResponse = doPostExpectStatus("/audit/filter", HttpStatus.INTERNAL_SERVER_ERROR, AuditBuilder.initDTO().build());
 
-        JSONAssert.assertEquals(expectedError, findAllAuditResponse, false);
+        JSONAssert.assertEquals(expectedError, findByExampleAuditResponse, false);
 
         verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
         verify(mockService, times(1)).findByExample(any(Audit.class), any(Pageable.class));
@@ -130,9 +131,9 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         when(mockConversor.toDTO(any(Audit.class))).thenThrow(new ConverterException(exceptionText));
 
         final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
-        final String findAllAuditResponse = doPostExpectStatus("/audit/filter", HttpStatus.INTERNAL_SERVER_ERROR, AuditBuilder.initDTO().build());
+        final String findByExampleAuditResponse = doPostExpectStatus("/audit/filter", HttpStatus.INTERNAL_SERVER_ERROR, AuditBuilder.initDTO().build());
 
-        JSONAssert.assertEquals(expectedError, findAllAuditResponse, false);
+        JSONAssert.assertEquals(expectedError, findByExampleAuditResponse, false);
 
         verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
         verify(mockService, times(1)).findByExample(any(Audit.class), any(Pageable.class));
@@ -169,6 +170,84 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
         verify(mockService, times(1)).findByExample(any(Audit.class), any(Pageable.class));
         verify(mockConversor, times(5)).toDTO(any(Audit.class));
+    }
+
+    @Test
+    public void should_return_error_500_when_find_by_id_service_throw_exception() throws Exception {
+        final String exceptionText = "Some creepy exception";
+        final long entityId = 1L;
+
+        when(mockService.findById(entityId)).thenThrow(new ServiceException(exceptionText));
+        when(mockConversor.toDTO(any(Audit.class))).thenReturn(AuditBuilder.initDTO().build());
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
+        final String findByIdAuditResponse = doGetExpectStatus("/audit/" + entityId, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        JSONAssert.assertEquals(expectedError, findByIdAuditResponse, false);
+
+        verify(mockService, times(1)).findById(entityId);
+    }
+
+    @Test
+    public void should_return_error_500_when_find_by_id_conversor_throw_exception_to_dto() throws Exception {
+        final String exceptionText = "Some creepy exception";
+        final long entityId = 1L;
+
+        when(mockService.findById(entityId)).thenReturn(AuditBuilder.initEntity().build());
+        when(mockConversor.toDTO(any(Audit.class))).thenThrow(new ConverterException(exceptionText));
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
+        final String findByIdAuditResponse = doGetExpectStatus("/audit/" + entityId, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        JSONAssert.assertEquals(expectedError, findByIdAuditResponse, false);
+
+        verify(mockService, times(1)).findById(entityId);
+        verify(mockConversor, times(1)).toDTO(any(Audit.class));
+    }
+
+    @Test
+    public void should_return_no_content_204_when_find_by_id_find_nothing() throws Exception {
+        final String exceptionText = "Entity not found";
+        final long entityId = 1L;
+
+        when(mockService.findById(anyLong())).thenThrow(new EntityNotFoundException(exceptionText));
+
+        final String expectedNoContentResponse = asJsonString(ProjectResponse.error(HttpStatus.NO_CONTENT, exceptionText));
+        final String findByIdAuditResponse = doGetExpectStatus("/audit/" + entityId, HttpStatus.NO_CONTENT);
+
+        JSONAssert.assertEquals(expectedNoContentResponse, findByIdAuditResponse, false);
+
+        verify(mockService, times(1)).findById(entityId);
+    }
+
+    @Test
+    public void should_return_page_when_find_by_id_return_successfull() throws Exception {
+        final long entityId = 1L;
+
+        final Audit audit = AuditBuilder
+                .initEntity()
+                .url("/someUrl/somePath/test")
+                .dateTime(LocalDateTime.now())
+                .type(AuditType.INFO)
+                .content(null)
+                .build();
+
+        final AuditDTO auditDTO = new AuditDTO();
+        auditDTO.setUrl(audit.getUrl());
+        auditDTO.setType(audit.getType().getCode());
+        auditDTO.setDateTime(audit.getDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        auditDTO.setContent(audit.getContent());
+
+        when(mockService.findById(entityId)).thenReturn(audit);
+        when(mockConversor.toDTO(audit)).thenReturn(auditDTO);
+
+        final String getResponse = doGetExpectStatus("/audit/" + entityId, HttpStatus.OK);
+        final String expectedResponse = asJsonString(ProjectResponse.ok(auditDTO));
+
+        JSONAssert.assertEquals(expectedResponse, getResponse, false);
+
+        verify(mockService, times(1)).findById(entityId);
+        verify(mockConversor, times(1)).toDTO(audit);
     }
 
 }

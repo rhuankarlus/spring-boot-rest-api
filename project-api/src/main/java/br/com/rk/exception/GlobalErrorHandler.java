@@ -2,6 +2,7 @@ package br.com.rk.exception;
 
 import br.com.rk.controller.dto.ProjectResponse;
 import br.com.rk.converters.ConverterException;
+import br.com.rk.services.exception.EntityNotFoundException;
 import br.com.rk.services.exception.ServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,17 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalErrorHandler {
 
     @ExceptionHandler({ServiceException.class, ConverterException.class})
-    public ResponseEntity<ProjectResponse> handleServiceException(final Exception ex, final WebRequest request) {
+    public ResponseEntity<ProjectResponse> handleInternalServerError(final Exception ex, final WebRequest request) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ProjectResponse> handleNoContent(final Exception ex, final WebRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(ProjectResponse.error(HttpStatus.NO_CONTENT, ex.getMessage()));
     }
 
 }
