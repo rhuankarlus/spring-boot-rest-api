@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -181,7 +182,6 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         final long entityId = 1L;
 
         when(mockService.findById(entityId)).thenThrow(new ServiceException(exceptionText));
-//        when(mockConversor.toDTO(any(Audit.class))).thenReturn(AuditBuilder.initDTO().build());
 
         final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
         final String findByIdAuditResponse = doGetExpectStatus("/audit/" + entityId, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -341,6 +341,35 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
         verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
         verify(mockService, times(1)).persist(audit);
         verify(mockConversor, times(1)).toDTO(audit);
+    }
+
+    @Test
+    public void should_return_error_500_when_delete_service_throw_exception() throws Exception {
+        final String exceptionText = "Some creepy exception";
+        final long entityId = 1L;
+
+        doThrow(new ServiceException(exceptionText)).when(mockService).delete(entityId);
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, exceptionText));
+        final String deleteAuditResponse = doDeleteExpectStatus("/audit/" + entityId, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        JSONAssert.assertEquals(expectedError, deleteAuditResponse, false);
+
+        verify(mockService, times(1)).delete(entityId);
+    }
+
+    @Test
+    public void should_return_ok_when_delete_return_successfull() throws Exception {
+        final long entityId = 1L;
+
+        doNothing().when(mockService).delete(entityId);
+
+        final String expectedResponse = "";
+        final String deleteAuditResponse = doDeleteExpectStatus("/audit/" + entityId, HttpStatus.OK);
+
+        JSONAssert.assertEquals(expectedResponse, deleteAuditResponse, false);
+
+        verify(mockService, times(1)).delete(entityId);
     }
 
 }

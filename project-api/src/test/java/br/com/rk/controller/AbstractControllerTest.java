@@ -1,5 +1,6 @@
 package br.com.rk.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
 
 import static br.com.rk.util.json.JsonCreator.asJsonString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -89,6 +88,24 @@ public abstract class AbstractControllerTest {
                         .getResponse()
                         .getContentAsString())
                 .toString();
+    }
+
+    protected String doDeleteExpectStatus(final String url, final HttpStatus status) throws Exception {
+        return doDeleteExpectStatus(url, null, status);
+    }
+
+    protected String doDeleteExpectStatus(final String url, final MultiValueMap<String, String> params,
+                                          final HttpStatus status) throws Exception {
+        final JsonNode response = new ObjectMapper().readTree(
+                this.mockMvc
+                        .perform(delete(url).params(insertPageData(params, null, null)))
+                        .andDo(print())
+                        .andExpect(status().is(status.value()))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString());
+
+        return response == null ? "" : response.toString();
     }
 
     protected MultiValueMap<String, String> insertPageData() {
