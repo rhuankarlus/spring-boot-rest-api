@@ -37,6 +37,10 @@ public abstract class AbstractControllerTest {
         return doGetExpectStatus(url, null, status, null, null);
     }
 
+    protected String doGetExpectStatus(final String url, final HttpStatus status, Integer page, Integer pageSize) throws Exception {
+        return doGetExpectStatus(url, null, status, page, pageSize);
+    }
+
     protected String doGetExpectStatus(final String url, final MultiValueMap<String, String> params,
                                        final HttpStatus status, Integer page, Integer pageSize) throws Exception {
         return new ObjectMapper().readTree(
