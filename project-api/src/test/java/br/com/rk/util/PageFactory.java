@@ -31,6 +31,10 @@ public class PageFactory {
         return PageRequest.of(page, size, sortObject);
     }
 
+    public static <T> Page<T> buildPage(final Supplier<T> randomObjectCreator) {
+        return buildPage(1, randomObjectCreator);
+    }
+
     public static <T> Page<T> buildPage(int size, final Supplier<T> randomObjectCreator) {
         return buildPage(buildPageable(size), size, randomObjectCreator);
     }
