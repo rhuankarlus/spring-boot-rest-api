@@ -165,7 +165,7 @@ public class ProjectResponse {
     }
 
     public static ProjectResponse ok(final Object content) {
-        return of(null, content, null);
+        return of(null, content, (Pagination) null);
     }
 
     public static ProjectResponse ok(final Object content, final Page<?> page) {
@@ -177,7 +177,7 @@ public class ProjectResponse {
     }
 
     public static ProjectResponse error(HttpStatus status, String message, List<String> errors) {
-        return of(new Metadata(status, message, errors), null, null);
+        return of(new Metadata(status, message, errors), null, (Pagination) null);
     }
 
     public static ProjectResponse of(final Page<?> page) {
@@ -185,10 +185,14 @@ public class ProjectResponse {
     }
 
     public static ProjectResponse of(final Metadata metadata, final Object content, final Page<?> page) {
+        return of(metadata, content, convertToPagination(page));
+    }
+
+    public static ProjectResponse of(final Metadata metadata, final Object content, final Pagination pagination) {
         final ProjectResponse projectResponse = new ProjectResponse();
         projectResponse.metadata = metadata;
         projectResponse.content = content;
-        projectResponse.pagination = convertToPagination(page);
+        projectResponse.pagination = pagination;
         return projectResponse;
     }
 
@@ -201,7 +205,7 @@ public class ProjectResponse {
                 page.getNumber(),
                 page.getSize(),
                 page.getTotalElements(),
-                page.getContent().size(),
+                page.getTotalPages(),
                 page.getSort());
     }
 
