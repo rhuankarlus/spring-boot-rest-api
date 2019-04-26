@@ -114,4 +114,21 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
         JSONAssert.assertEquals(expectedResponse, getAuditsResponse, false);
     }
 
+    @Test
+    public void should_find_one_by_example() throws Exception {
+        final String expectedResponse = asJsonString(ProjectResponse.of(
+                null,
+                Arrays.asList(audits.get(3)),
+                new ProjectResponse.Pagination(
+                        0, 1, 1, 1,
+                        Sort.unsorted())));
+
+        final String findByExampleResponse = doPostExpectStatus(
+                "/audit/filter",
+                HttpStatus.OK,
+                AuditBuilder.initDTO().url("/path6/path7").build());
+
+        JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
+    }
+
 }

@@ -25,7 +25,9 @@ public class AuditConversor implements Conversor<AuditDTO, Audit> {
         audit.setContent(dto.getContent());
 
         try {
-            audit.setType(AuditType.fromCode(dto.getType()));
+            if (dto.getType() != null) {
+                audit.setType(AuditType.fromCode(dto.getType()));
+            }
         } catch (EnumNotFoundException e) {
             throw new ConverterException("Error when trying to convert AuditType code.", e);
         }
