@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application-test.properties")
 public abstract class AbstractControllerTest {
 
-    private static final String PAGE_HEADER = "page";
-    private static final String PAGE_SIZE_HEADER = "size";
+    private static final String PAGE_PARAM = "page";
+    private static final String PAGE_SIZE_PARAM = "size";
+    private static final String SORT_PARAM = "sort";
 
     @Autowired
     protected MockMvc mockMvc;
@@ -43,9 +45,18 @@ public abstract class AbstractControllerTest {
 
     protected String doGetExpectStatus(final String url, final MultiValueMap<String, String> params,
                                        final HttpStatus status, Integer page, Integer pageSize) throws Exception {
+        return doGetExpectStatus(url, status, insertPageData(params, page, pageSize));
+    }
+
+    protected String doGetExpectStatus(final String url, final HttpStatus status,
+                                       MultiValueMap<String, String> params) throws Exception {
+        if (params == null) {
+            params = new HttpHeaders();
+        }
+
         return new ObjectMapper().readTree(
                 this.mockMvc
-                        .perform(get(url).params(insertPageData(params, page, pageSize)))
+                        .perform(get(url).params(params))
                         .andDo(print())
                         .andExpect(status().is(status.value()))
                         .andReturn()
@@ -122,8 +133,18 @@ public abstract class AbstractControllerTest {
             params = new HttpHeaders();
         }
 
-        params.add(PAGE_HEADER, page == null || page < 0 ? "0" : String.valueOf(page));
-        params.add(PAGE_SIZE_HEADER, pageSize == null || pageSize < 1 ? "1" : String.valueOf(pageSize));
+        params.add(PAGE_PARAM, page == null || page < 0 ? "0" : String.valueOf(page));
+        params.add(PAGE_SIZE_PARAM, pageSize == null || pageSize < 1 ? "1" : String.valueOf(pageSize));
+
+        return params;
+    }
+
+    protected MultiValueMap<String, String> insertSortData(MultiValueMap<String, String> params, final Sort.Order order) {
+        if (params == null) {
+            params = new HttpHeaders();
+        }
+
+        params.add(SORT_PARAM, order.getProperty() + "," + order.getDirection().name());
 
         return params;
     }

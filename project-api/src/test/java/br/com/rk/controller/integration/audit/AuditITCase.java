@@ -103,4 +103,29 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
         JSONAssert.assertEquals(expectedResponse, getAuditsResponse, false);
     }
 
+    @Test
+    public void should_return_elements_ordered_find_all() throws Exception {
+        final AuditDTO audit6 = AuditBuilder
+                .initDTO()
+                .url("/")
+                .content("some content 6")
+                .type(AuditType.ERROR)
+                .dateTime(LocalDateTime.parse("2019-04-18T05:52:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .build();
+
+        final String expectedResponse = asJsonString(ProjectResponse.of(
+                null,
+                Arrays.asList(audit5, audit6),
+                new ProjectResponse.Pagination(
+                        0, 2, 6, 3,
+                        Sort.by(Sort.Order.desc("dateTime")))));
+
+        final String getAuditsResponse = doGetExpectStatus(
+                "/audit",
+                HttpStatus.OK,
+                insertSortData(insertPageData(null, 0, 2), Sort.Order.desc("dateTime")));
+
+        JSONAssert.assertEquals(expectedResponse, getAuditsResponse, false);
+    }
+
 }
