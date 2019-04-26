@@ -21,6 +21,7 @@ public class AuditConversor implements Conversor<AuditDTO, Audit> {
     @Override
     public Audit toEntity(final AuditDTO dto) throws ConverterException {
         final Audit audit = new Audit();
+        audit.setId(dto.getId());
         audit.setUrl(dto.getUrl());
         audit.setContent(dto.getContent());
 
@@ -42,6 +43,7 @@ public class AuditConversor implements Conversor<AuditDTO, Audit> {
     @Override
     public AuditDTO toDTO(final Audit audit) {
         final AuditDTO dto = new AuditDTO();
+        dto.setId(audit.getId());
         dto.setUrl(audit.getUrl());
         dto.setContent(audit.getContent());
         dto.setType(audit.getType().getCode());

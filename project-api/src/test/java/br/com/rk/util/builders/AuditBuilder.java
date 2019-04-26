@@ -68,6 +68,11 @@ public class AuditBuilder {
             this.audit = new AuditDTO();
         }
 
+        public AuditDTOBuilder id(final Long id) {
+            audit.setId(id);
+            return this;
+        }
+
         public AuditDTOBuilder url(final String url) {
             audit.setUrl(url);
             return this;

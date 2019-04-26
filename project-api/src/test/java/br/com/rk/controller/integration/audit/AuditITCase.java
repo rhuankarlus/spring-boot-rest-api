@@ -28,6 +28,7 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
     private static final List<AuditDTO> audits = new ArrayList<AuditDTO>() {{
         add(AuditBuilder
                 .initDTO()
+                .id(1L)
                 .url("/path1/path2/path3")
                 .content("some content 1")
                 .type(AuditType.ERROR)
@@ -36,6 +37,7 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
 
         add(AuditBuilder
                 .initDTO()
+                .id(2L)
                 .url("/path1/path4/path5")
                 .content("some content 2")
                 .type(AuditType.ERROR)
@@ -44,6 +46,7 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
 
         add(AuditBuilder
                 .initDTO()
+                .id(3L)
                 .url("/path1/path2/path3")
                 .content("some content 3")
                 .type(AuditType.INFO)
@@ -52,6 +55,7 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
 
         add(AuditBuilder
                 .initDTO()
+                .id(4L)
                 .url("/path6/path7")
                 .content("some content 4")
                 .type(AuditType.INFO)
@@ -60,6 +64,7 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
 
         add(AuditBuilder
                 .initDTO()
+                .id(5L)
                 .url("/path8")
                 .content("some content 5")
                 .type(AuditType.INFO)
@@ -68,6 +73,7 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
 
         add(AuditBuilder
                 .initDTO()
+                .id(6L)
                 .url("/")
                 .content("some content 6")
                 .type(AuditType.ERROR)
@@ -118,7 +124,7 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
     public void should_find_one_by_example() throws Exception {
         final String expectedResponse = asJsonString(ProjectResponse.of(
                 null,
-                Arrays.asList(audits.get(3)),
+                Collections.singletonList(audits.get(3)),
                 new ProjectResponse.Pagination(
                         0, 1, 1, 1,
                         Sort.unsorted())));
@@ -127,6 +133,41 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
                 "/audit/filter",
                 HttpStatus.OK,
                 AuditBuilder.initDTO().url("/path6/path7").build());
+
+        JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
+    }
+
+    @Test
+    public void should_find_more_than_one_by_example() throws Exception {
+        final String expectedResponse = asJsonString(ProjectResponse.of(
+                null,
+                audits,
+                new ProjectResponse.Pagination(
+                        0, 6, 6, 1,
+                        Sort.unsorted())));
+
+        final String findByExampleResponse = doPostExpectStatus(
+                "/audit/filter",
+                HttpStatus.OK,
+                AuditBuilder.initDTO().url("/").build());
+
+        JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
+    }
+
+    @Test
+    public void should_return_204_no_content_when_find_by_example_returns_nothing() throws Exception {
+        final String expectedResponse = asJsonString(ProjectResponse.error(
+                HttpStatus.NO_CONTENT,
+                "No entity found"));
+
+        for (final AuditDTO auditDTO : audits) {
+            doDeleteExpectStatus("/audit/" + auditDTO.getId(), HttpStatus.OK);
+        }
+
+        final String findByExampleResponse = doPostExpectStatus(
+                "/audit/filter",
+                HttpStatus.NO_CONTENT,
+                AuditBuilder.initDTO().build());
 
         JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
     }
