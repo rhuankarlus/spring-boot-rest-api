@@ -1,0 +1,1 @@
+DELETE FROM audit; ALTER SEQUENCE id_seq_audit RESTART WITH 1;

@@ -36,20 +36,20 @@ public abstract class AbstractCrudController<D extends DTO, E extends ProjectEnt
 
     @PostMapping("/filter")
     @ResponseBody
-    public ResponseEntity<ProjectResponse> findAll(@RequestBody D dto, @PageableDefault final Pageable pageable) throws ServiceException {
+    public ResponseEntity<ProjectResponse> findAllByExample(@RequestBody D dto, @PageableDefault final Pageable pageable) throws ServiceException {
         return ResponseEntity.ok(convertPage(getService().findByExample(conversor.toEntity(dto), pageable)));
     }
 
     @ResponseBody
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProjectResponse> getById(@PathVariable("id") final Long id) throws ServiceException {
-        return ResponseEntity.ok(ProjectResponse.of(conversor.toDTO(getService().findById(id))));
+        return ResponseEntity.ok(ProjectResponse.ok(conversor.toDTO(getService().findById(id))));
     }
 
     @PutMapping
     @ResponseBody
     public ResponseEntity<ProjectResponse> persist(@RequestBody final D dto) throws ServiceException {
-        return ResponseEntity.ok(ProjectResponse.of(conversor.toDTO(getService().persist(conversor.toEntity(dto)))));
+        return ResponseEntity.ok(ProjectResponse.ok(conversor.toDTO(getService().persist(conversor.toEntity(dto)))));
     }
 
     @ResponseBody
@@ -65,14 +65,7 @@ public abstract class AbstractCrudController<D extends DTO, E extends ProjectEnt
             dtos.add(conversor.toDTO(entity));
         }
 
-        final ProjectResponse.Pagination pagination = new ProjectResponse.Pagination(
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.getSort());
-
-        return ProjectResponse.of(null, dtos, pagination);
+        return ProjectResponse.ok(dtos, page);
     }
 
     protected ProjectCrudService<E> getService() {

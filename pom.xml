@@ -22,6 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <skip.unit.tests>false</skip.unit.tests>
+        <skip.integration.tests>false</skip.integration.tests>
 
         <!-- Versão dos plugins -->
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
@@ -104,13 +105,10 @@
                     <skip>true</skip>
                     <!-- Skips unit tests if the value of skip.unit.tests property is true -->
                     <skipTests>${skip.unit.tests}</skipTests>
-                    <!-- Excludes integration tests when unit tests are run. ß -->
-                    <excludes>
-                        <exclude>**/IT*.java</exclude>
-                    </excludes>
                     <argLine>-XX:-UseSplitVerifier</argLine>
                 </configuration>
                 <executions>
+                    <!-- unit tests execution -->
                     <execution>
                         <id>unit-tests</id>
                         <phase>test</phase>
@@ -120,6 +118,27 @@
                         <configuration>
                             <argLine>${UTestArgLine} -Xmx512m -XX:MaxPermSize=256m</argLine>
                             <skip>${skip.unit.tests}</skip>
+                            <!-- Excludes integration tests when unit tests are run. -->
+                            <excludes>
+                                <exclude>**/*ITCase.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+
+                    <!-- integration tests execution -->
+                    <execution>
+                        <id>integration-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>
+                            <skip>${skip.integration.tests}</skip>
+                            <!-- Includes only integration tests when unit tests are run. ß -->
+                            <includes>
+                                <include>**/*ITCase.java</include>
+                            </includes>
                         </configuration>
                     </execution>
                 </executions>
@@ -210,7 +229,7 @@
     </build>
 
     <dependencies>
-        <!-- Dependências de teste: JUnit, Mockito -->
+        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -222,11 +241,13 @@
             <version>${mockito-all.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Used to bootstrap application, change to test scope when build projects using this architecture -->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>${hsqldb.version}</version>
-            <scope>test</scope>
+            <!--<scope>test</scope>-->
         </dependency>
     </dependencies>
 

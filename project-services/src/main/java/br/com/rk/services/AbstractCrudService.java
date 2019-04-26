@@ -2,6 +2,7 @@ package br.com.rk.services;
 
 import br.com.rk.entities.ProjectEntity;
 import br.com.rk.repositories.ProjectRepository;
+import br.com.rk.services.exception.EntityNotFoundException;
 import br.com.rk.services.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,29 +27,29 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
     }
 
     @Override
-    public E findById(Long id) throws ServiceException {
-        if (id == null) {
-            throw new ServiceException("The ID can't be null.");
-        }
-
-        return projectRepository.findById(id).orElseThrow(() -> new ServiceException("Entity with ID " + id + " not found."));
+    public E findById(long id) throws ServiceException {
+        return projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity with ID " + id + " not found."));
     }
 
     @Override
     public E persist(E entidade) throws ServiceException {
+        if (entidade == null) {
+            throw new ServiceException("The entity shouldn't be null.");
+        }
+
         try {
             return projectRepository.save(entidade);
         } catch (Exception e) {
-            throw new ServiceException("Erro ao tentar persistir a entidade", e);
+            throw new ServiceException("Error trying to persist entity", e);
         }
     }
 
     @Override
-    public void delete(Long id) throws ServiceException {
+    public void delete(long id) throws ServiceException {
         try {
             projectRepository.deleteById(id);
         } catch (Exception e) {
-            throw new ServiceException("Erro ao tentar deletar a entidade", e);
+            throw new ServiceException("Error trying to delete the entity", e);
         }
     }
 
@@ -57,23 +58,32 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
         try {
             return projectRepository.findAll();
         } catch (Exception e) {
-            throw new ServiceException("Erro ao tentar ler a lista de entidades do banco", e);
+            throw new ServiceException("Error when trying to read the entities list from database", e);
         }
     }
 
     @Override
-    public Page<E> findAll(Pageable paginador) throws ServiceException {
+    public Page<E> findAll(final Pageable pageable) throws ServiceException {
+        if (pageable == null) {
+            throw new ServiceException("Can't find page with a null paginator.");
+        }
+
         try {
-            return projectRepository.findAll(paginador);
+            return projectRepository.findAll(pageable);
         } catch (Exception e) {
-            throw new ServiceException("Erro ao tentar ler a página de entidades do banco", e);
+            throw new ServiceException("Error when trying to read the entities page from database", e);
         }
     }
 
     @Override
     public Page<E> findByExample(final E entity, final Pageable pageable) throws ServiceException {
         validateParams(entity, pageable);
-        return getProjectRepository().findAll(buildSpecifications(entity), pageable);
+        final Page<E> pageFiltered = getProjectRepository().findAll(buildSpecifications(entity), pageable);
+        if (pageFiltered == null || pageFiltered.getContent() == null || pageFiltered.getContent().size() == 0) {
+            throw new EntityNotFoundException("No entity found");
+        }
+
+        return pageFiltered;
     }
 
     protected abstract void validateParams(final E entity, final Pageable pageable) throws ServiceException;
