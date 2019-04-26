@@ -172,18 +172,57 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
     public void should_return_correct_result_find_by_id() throws Exception {
         final String expectedResponse = asJsonString(ProjectResponse.ok(audits.get(0)));
 
-        final String findByExampleResponse = doGetExpectStatus("/audit/" + audits.get(0).getId(), HttpStatus.OK);
+        final String findByIdResponse = doGetExpectStatus("/audit/" + audits.get(0).getId(), HttpStatus.OK);
 
-        JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
+        JSONAssert.assertEquals(expectedResponse, findByIdResponse, false);
     }
 
     @Test
     public void should_return_204_no_content_when_find_by_id_returns_nothing() throws Exception {
         final String expectedResponse = asJsonString(ProjectResponse.error(HttpStatus.NO_CONTENT, "Entity with ID 9999 not found."));
 
-        final String findByExampleResponse = doGetExpectStatus("/audit/" + 9999, HttpStatus.NO_CONTENT);
+        final String findByIdResponse = doGetExpectStatus("/audit/" + 9999, HttpStatus.NO_CONTENT);
 
-        JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
+        JSONAssert.assertEquals(expectedResponse, findByIdResponse, false);
+    }
+
+    @Test
+    public void should_persist_new_entity_from_dto() throws Exception {
+        final AuditDTO auditDTO = AuditBuilder
+                .initDTO()
+                .url("/bar/foo/test")
+                .content("this is a simple content")
+                .type(AuditType.INFO)
+                .dateTime(LocalDateTime.now())
+                .build();
+
+        final String persistAuditResponse = doPutExpectStatus("/audit", HttpStatus.OK, auditDTO);
+
+        auditDTO.setId(7L);
+        final String expectedResponse = asJsonString(ProjectResponse.ok(auditDTO));
+
+        JSONAssert.assertEquals(expectedResponse, persistAuditResponse, false);
+    }
+
+    @Test
+    public void should_update_entity_from_dto() throws Exception {
+        final AuditDTO auditDTO = AuditBuilder
+                .initDTO()
+                .url("/bar/foo/test")
+                .content("this is a simple content")
+                .type(AuditType.INFO)
+                .dateTime(LocalDateTime.now())
+                .build();
+
+        doPutExpectStatus("/audit", HttpStatus.OK, auditDTO);
+
+        auditDTO.setId(7L);
+        auditDTO.setUrl("/another/url");
+
+        final String updateAuditResponse = doPutExpectStatus("/audit", HttpStatus.OK, auditDTO);
+        final String expectedResponse = asJsonString(ProjectResponse.ok(auditDTO));
+
+        JSONAssert.assertEquals(expectedResponse, updateAuditResponse, false);
     }
 
 }
