@@ -142,6 +142,22 @@ public class AuditControllerTest extends AbstractCrudControllerTest<Audit, Audit
     }
 
     @Test
+    public void should_return_no_content_204_when_find_by_example_returns_nothing() throws Exception {
+        final String exceptionText = "No entities found";
+
+        when(mockConversor.toEntity(any(AuditDTO.class))).thenReturn(AuditBuilder.initEntity().build());
+        when(mockService.findByExample(any(Audit.class), any(Pageable.class))).thenThrow(new EntityNotFoundException(exceptionText));
+
+        final String expectedError = asJsonString(ProjectResponse.error(HttpStatus.NO_CONTENT, exceptionText));
+        final String findByExampleAuditResponse = doPostExpectStatus("/audit/filter", HttpStatus.NO_CONTENT, AuditBuilder.initDTO().build());
+
+        JSONAssert.assertEquals(expectedError, findByExampleAuditResponse, false);
+
+        verify(mockConversor, times(1)).toEntity(any(AuditDTO.class));
+        verify(mockService, times(1)).findByExample(any(Audit.class), any(Pageable.class));
+    }
+
+    @Test
     public void should_return_page_when_find_all_by_example_return_successfull() throws Exception {
         final Audit audit = AuditBuilder
                 .initEntity()
