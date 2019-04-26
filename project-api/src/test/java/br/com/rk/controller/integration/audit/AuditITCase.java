@@ -9,12 +9,13 @@ import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static br.com.rk.util.json.JsonCreator.asJsonString;
 
@@ -24,19 +25,61 @@ import static br.com.rk.util.json.JsonCreator.asJsonString;
  */
 public class AuditITCase extends AbstractControllerIntegrationTest {
 
-    @Test
-    public void should_return_first_element_correctly_find_all() throws Exception {
-        final AuditDTO expectedAuditDTO = AuditBuilder
+    private static final List<AuditDTO> audits = new ArrayList<AuditDTO>() {{
+        add(AuditBuilder
                 .initDTO()
                 .url("/path1/path2/path3")
                 .content("some content 1")
                 .type(AuditType.ERROR)
                 .dateTime(LocalDateTime.parse("2018-12-23T15:46:13", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
+                .build());
 
+        add(AuditBuilder
+                .initDTO()
+                .url("/path1/path4/path5")
+                .content("some content 2")
+                .type(AuditType.ERROR)
+                .dateTime(LocalDateTime.parse("2019-01-02T09:30:13", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .build());
+
+        add(AuditBuilder
+                .initDTO()
+                .url("/path1/path2/path3")
+                .content("some content 3")
+                .type(AuditType.INFO)
+                .dateTime(LocalDateTime.parse("2019-01-02T10:15:55", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .build());
+
+        add(AuditBuilder
+                .initDTO()
+                .url("/path6/path7")
+                .content("some content 4")
+                .type(AuditType.INFO)
+                .dateTime(LocalDateTime.parse("2019-02-15T14:00:55", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .build());
+
+        add(AuditBuilder
+                .initDTO()
+                .url("/path8")
+                .content("some content 5")
+                .type(AuditType.INFO)
+                .dateTime(LocalDateTime.parse("2019-02-22T21:02:47", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .build());
+
+        add(AuditBuilder
+                .initDTO()
+                .url("/")
+                .content("some content 6")
+                .type(AuditType.ERROR)
+                .dateTime(LocalDateTime.parse("2019-04-18T05:52:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .build());
+    }};
+
+    @Test
+    public void should_return_first_element_correctly_find_all() throws Exception {
         final String expectedResponse = asJsonString(ProjectResponse.of(
                 null,
-                Collections.singletonList(expectedAuditDTO),
+                Collections.singletonList(audits.get(0)),
                 new ProjectResponse.Pagination(0, 1, 6, 6, Sort.unsorted())));
 
         final String getAuditsResponse = doGetExpectStatus("/audit", HttpStatus.OK);
@@ -46,57 +89,7 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
 
     @Test
     public void should_return_all_elements_correctly_find_all() throws Exception {
-        final AuditDTO audit1 = AuditBuilder
-                .initDTO()
-                .url("/path1/path2/path3")
-                .content("some content 1")
-                .type(AuditType.ERROR)
-                .dateTime(LocalDateTime.parse("2018-12-23T15:46:13", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
-
-        final AuditDTO audit2 = AuditBuilder
-                .initDTO()
-                .url("/path1/path4/path5")
-                .content("some content 2")
-                .type(AuditType.ERROR)
-                .dateTime(LocalDateTime.parse("2019-01-02T09:30:13", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
-
-        final AuditDTO audit3 = AuditBuilder
-                .initDTO()
-                .url("/path1/path2/path3")
-                .content("some content 3")
-                .type(AuditType.INFO)
-                .dateTime(LocalDateTime.parse("2019-01-02T10:15:55", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
-
-        final AuditDTO audit4 = AuditBuilder
-                .initDTO()
-                .url("/path6/path7")
-                .content("some content 4")
-                .type(AuditType.INFO)
-                .dateTime(LocalDateTime.parse("2019-02-15T14:00:55", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
-
-        final AuditDTO audit5 = AuditBuilder
-                .initDTO()
-                .url("/path8")
-                .content("some content 5")
-                .type(AuditType.INFO)
-                .dateTime(LocalDateTime.parse("2019-02-22T21:02:47", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
-
-        final AuditDTO audit6 = AuditBuilder
-                .initDTO()
-                .url("/")
-                .content("some content 6")
-                .type(AuditType.ERROR)
-                .dateTime(LocalDateTime.parse("2019-04-18T05:52:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
-
-        final String expectedResponse = asJsonString(ProjectResponse.of(
-                null,
-                Arrays.asList(audit1, audit2, audit3, audit4, audit5, audit6),
+        final String expectedResponse = asJsonString(ProjectResponse.of(null, audits,
                 new ProjectResponse.Pagination(0, 6, 6, 1, Sort.unsorted())));
 
         final String getAuditsResponse = doGetExpectStatus("/audit", HttpStatus.OK, 0, 6);
@@ -106,25 +99,9 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
 
     @Test
     public void should_return_elements_ordered_find_all() throws Exception {
-        final AuditDTO audit5 = AuditBuilder
-                .initDTO()
-                .url("/path8")
-                .content("some content 5")
-                .type(AuditType.INFO)
-                .dateTime(LocalDateTime.parse("2019-02-22T21:02:47", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
-
-        final AuditDTO audit6 = AuditBuilder
-                .initDTO()
-                .url("/")
-                .content("some content 6")
-                .type(AuditType.ERROR)
-                .dateTime(LocalDateTime.parse("2019-04-18T05:52:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .build();
-
         final String expectedResponse = asJsonString(ProjectResponse.of(
                 null,
-                Arrays.asList(audit5, audit6),
+                Arrays.asList(audits.get(4), audits.get(5)),
                 new ProjectResponse.Pagination(
                         0, 2, 6, 3,
                         Sort.by(Sort.Order.desc("dateTime")))));
