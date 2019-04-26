@@ -5,10 +5,8 @@ import br.com.rk.repositories.ProjectRepository;
 import br.com.rk.services.exception.ServiceException;
 import br.com.rk.services.factory.PageFactory;
 import br.com.rk.services.factory.ProjectEntityFactory;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +14,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -27,21 +24,15 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("unchecked")
 public class AbstractCrudServiceTest {
 
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
-
     private AbstractCrudService sut;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         sut = mock(AbstractCrudService.class);
     }
 
     @Test
     public void should_throw_exception_when_entity_not_found() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("Entity with ID 1 not found.");
-
         final long id = 1L;
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
@@ -52,11 +43,12 @@ public class AbstractCrudServiceTest {
                 .when(sut)
                 .findById(id);
 
-        try {
-            sut.findById(id);
-        } finally {
-            verify(mockRepo, times(1)).findById(id);
-        }
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.findById(id));
+
+        assertEquals("Entity with ID 1 not found.", expectedException.getMessage());
+
+        verify(mockRepo, times(1)).findById(id);
     }
 
     @Test
@@ -74,29 +66,26 @@ public class AbstractCrudServiceTest {
 
         final ProjectEntity returnedProjectEntity = sut.findById(id);
 
-        assertNotNull("It shouldn't return null entity.", returnedProjectEntity);
-        assertEquals("It should return the entity with id " + id, Long.valueOf(id), returnedProjectEntity.getId());
+        assertNotNull(returnedProjectEntity, "It shouldn't return null entity.");
+        assertEquals(Long.valueOf(id), returnedProjectEntity.getId(), "It should return the entity with id " + id);
 
         verify(mockRepo, times(1)).findById(id);
     }
 
     @Test
     public void should_throw_exception_when_entity_to_persist_is_null() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("The entity shouldn't be null.");
-
         doCallRealMethod()
                 .when(sut)
                 .persist(any());
 
-        sut.persist(null);
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.persist(null));
+
+        assertEquals("The entity shouldn't be null.", expectedException.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_persist_entity_throws_exception() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("Error trying to persist entity");
-
         final ProjectEntity projectEntity = ProjectEntityFactory.buildSimpleEntityWithId(1L);
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.save(projectEntity)).thenThrow(Exception.class);
@@ -106,11 +95,12 @@ public class AbstractCrudServiceTest {
                 .when(sut)
                 .persist(projectEntity);
 
-        try {
-            sut.persist(projectEntity);
-        } finally {
-            verify(mockRepo, times(1)).save(projectEntity);
-        }
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.persist(projectEntity));
+
+        assertEquals("Error trying to persist entity", expectedException.getMessage());
+
+        verify(mockRepo, times(1)).save(projectEntity);
     }
 
     @Test
@@ -130,17 +120,14 @@ public class AbstractCrudServiceTest {
 
         final ProjectEntity returnedProjectEntity = sut.persist(projectEntity);
 
-        assertNotNull("It shouldn't return a null entity.", returnedProjectEntity);
-        assertEquals("It should return the entity with id " + id, id, returnedProjectEntity.getId());
+        assertNotNull(returnedProjectEntity, "It shouldn't return a null entity.");
+        assertEquals(id, returnedProjectEntity.getId(), "It should return the entity with id " + id);
 
         verify(mockRepo, times(1)).save(projectEntity);
     }
 
     @Test
     public void should_throw_exception_when_delete_fail() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("Error trying to delete the entity");
-
         final long id = 1L;
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         doThrow(Exception.class).when(mockRepo).deleteById(isA(Long.class));
@@ -150,11 +137,12 @@ public class AbstractCrudServiceTest {
                 .when(sut)
                 .delete(id);
 
-        try {
-            sut.delete(id);
-        } finally {
-            verify(mockRepo, times(1)).deleteById(id);
-        }
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.delete(id));
+
+        assertEquals("Error trying to delete the entity", expectedException.getMessage());
+
+        verify(mockRepo, times(1)).deleteById(id);
     }
 
     @Test
@@ -176,9 +164,6 @@ public class AbstractCrudServiceTest {
 
     @Test
     public void should_throw_exception_when_find_all_fail() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("Error when trying to read the entities list from database");
-
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findAll()).thenThrow(Exception.class);
         Whitebox.setInternalState(sut, "projectRepository", mockRepo);
@@ -187,11 +172,12 @@ public class AbstractCrudServiceTest {
                 .when(sut)
                 .findAll();
 
-        try {
-            sut.findAll();
-        } finally {
-            verify(mockRepo, times(1)).findAll();
-        }
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.findAll());
+
+        assertEquals("Error when trying to read the entities list from database", expectedException.getMessage());
+
+        verify(mockRepo, times(1)).findAll();
     }
 
     @Test
@@ -209,29 +195,26 @@ public class AbstractCrudServiceTest {
 
         final List<ProjectEntity> returnedProjectEntityList = sut.findAll();
 
-        assertNotNull("It shouldn't return a null list", returnedProjectEntityList);
-        assertEquals("It should return " + listSize + " elements in the list.", listSize, returnedProjectEntityList.size());
+        assertNotNull(returnedProjectEntityList, "It shouldn't return a null list");
+        assertEquals(listSize, returnedProjectEntityList.size(), "It should return " + listSize + " elements in the list.");
 
         verify(mockRepo, times(1)).findAll();
     }
 
     @Test
     public void should_throw_exception_when_pageable_to_find_all_is_null() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("Can't find page with a null paginator.");
-
         doCallRealMethod()
                 .when(sut)
                 .findAll(any());
 
-        sut.findAll(null);
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.findAll(null));
+
+        assertEquals("Can't find page with a null paginator.", expectedException.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_find_all_paginated_throw_exception() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("Error when trying to read the entities page from database");
-
         final Pageable pageable = PageFactory.buildSimplePageable();
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findAll(any(Pageable.class))).thenThrow(Exception.class);
@@ -241,11 +224,12 @@ public class AbstractCrudServiceTest {
                 .when(sut)
                 .findAll(any());
 
-        try {
-            sut.findAll(pageable);
-        } finally {
-            verify(mockRepo, times(1)).findAll(pageable);
-        }
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.findAll(pageable));
+
+        assertEquals("Error when trying to read the entities page from database", expectedException.getMessage());
+
+        verify(mockRepo, times(1)).findAll(pageable);
     }
 
     @Test
@@ -262,8 +246,8 @@ public class AbstractCrudServiceTest {
 
         final Page<ProjectEntity> returnedProjectEntitiesPage = sut.findAll(pageable);
 
-        assertNotNull("The list returned shouldn't be null.", returnedProjectEntitiesPage);
-        assertEquals("It should return only 5 elements.", 5, returnedProjectEntitiesPage.getContent().size());
+        assertNotNull(returnedProjectEntitiesPage, "The list returned shouldn't be null.");
+        assertEquals(5, returnedProjectEntitiesPage.getContent().size(), "It should return only 5 elements.");
 
         verify(mockRepo, times(1)).findAll(pageable);
     }

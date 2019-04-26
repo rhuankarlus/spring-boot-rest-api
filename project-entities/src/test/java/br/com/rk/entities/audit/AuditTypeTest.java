@@ -1,22 +1,18 @@
 package br.com.rk.entities.audit;
 
 import br.com.rk.exceptions.EnumNotFoundException;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Rhuan Karlus
  * @since 22/03/19
  */
 public class AuditTypeTest {
-
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
     public void dont_use_same_code_for_two_audit_types() {
@@ -32,27 +28,31 @@ public class AuditTypeTest {
         }
 
         if (!enumsWithSameCode.isEmpty()) {
-            Assert.fail("The following AuditTypes are repeated: " + String.join(",", enumsWithSameCode));
+            fail("The following AuditTypes are repeated: " + String.join(",", enumsWithSameCode));
         }
 
     }
 
     @Test
     public void should_throw_exception_when_code_is_null() throws EnumNotFoundException {
-        exceptionRule.expect(EnumNotFoundException.class);
-        exceptionRule.expectMessage("You should enter a valid argument in order to calculate the enum field.");
+        final EnumNotFoundException expectedException =
+                assertThrows(EnumNotFoundException.class, () -> AuditType.fromCode(null));
 
-        AuditType.fromCode(null);
+        assertEquals(
+                "You should enter a valid argument in order to calculate the enum field.",
+                expectedException.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_code_not_exists() throws EnumNotFoundException {
         final Integer nonExistentCode = -1;
 
-        exceptionRule.expect(EnumNotFoundException.class);
-        exceptionRule.expectMessage("The code " + nonExistentCode + " doesn't belong to any constant.");
+        final EnumNotFoundException expectedException =
+                assertThrows(EnumNotFoundException.class, () -> AuditType.fromCode(nonExistentCode));
 
-        AuditType.fromCode(nonExistentCode);
+        assertEquals(
+                "The code " + nonExistentCode + " doesn't belong to any constant.",
+                expectedException.getMessage());
     }
 
 }
