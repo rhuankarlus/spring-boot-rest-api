@@ -1,11 +1,13 @@
 package br.com.rk.entities.converters;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Rhuan Karlus
@@ -15,7 +17,7 @@ public class LocalDateTimeConverterTest {
 
     public LocalDateTimeConverter sut;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         sut = new LocalDateTimeConverter();
     }
@@ -24,10 +26,10 @@ public class LocalDateTimeConverterTest {
     public void should_convert_local_date_time_to_correct_timestamp() {
         final LocalDateTime localDateTime = LocalDateTime.now();
 
-        Assert.assertEquals(
-                "The local date time was converted incorrectly",
+        assertEquals(
                 Timestamp.valueOf(localDateTime),
-                sut.convertToDatabaseColumn(localDateTime));
+                sut.convertToDatabaseColumn(localDateTime),
+                "The local date time was converted incorrectly");
     }
 
     @Test
@@ -35,24 +37,24 @@ public class LocalDateTimeConverterTest {
         final LocalDateTime localDateTime = LocalDateTime.now();
         final Timestamp timestamp = Timestamp.valueOf(localDateTime);
 
-        Assert.assertEquals(
-                "The auditType was converted incorrectly",
+        assertEquals(
                 timestamp,
-                Timestamp.valueOf(sut.convertToEntityAttribute(timestamp)));
+                Timestamp.valueOf(sut.convertToEntityAttribute(timestamp)),
+                "The auditType was converted incorrectly");
     }
 
     @Test
     public void should_convert_to_null_when_local_date_time_is_null() {
-        Assert.assertNull(
-                "The conversor should return null to persist on database when local date time is null.",
-                sut.convertToDatabaseColumn(null));
+        assertNull(
+                sut.convertToDatabaseColumn(null),
+                "The conversor should return null to persist on database when local date time is null.");
     }
 
     @Test
     public void should_convert_to_null_when_timestamp_is_null() {
-        Assert.assertNull(
-                "The conversor should return null when the table value is null.",
-                sut.convertToEntityAttribute(null));
+        assertNull(
+                sut.convertToEntityAttribute(null),
+                "The conversor should return null when the table value is null.");
     }
 
 }

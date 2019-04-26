@@ -2,10 +2,11 @@ package br.com.rk.services.audit.impl;
 
 import br.com.rk.entities.audit.Audit;
 import br.com.rk.services.exception.ServiceException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Rhuan Karlus
@@ -13,30 +14,27 @@ import org.junit.rules.ExpectedException;
  */
 public class AuditCrudServiceImplTest {
 
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
-
     private AuditCrudServiceImpl sut;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() {
         sut = new AuditCrudServiceImpl();
     }
 
     @Test
-    public void should_throw_exception_when_audit_is_null() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("The audit object can't be null.");
+    public void should_throw_exception_when_audit_is_null() {
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.validateParams(null, null));
 
-        sut.validateParams(null, null);
+        assertEquals("The audit object can't be null.", expectedException.getMessage());
     }
 
     @Test
-    public void should_throw_exception_when_pageable_is_null() throws ServiceException {
-        exceptionRule.expect(ServiceException.class);
-        exceptionRule.expectMessage("The pageable object can't be null.");
+    public void should_throw_exception_when_pageable_is_null() {
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.validateParams(new Audit(), null));
 
-        sut.validateParams(new Audit(), null);
+        assertEquals("The pageable object can't be null.", expectedException.getMessage());
     }
 
 }

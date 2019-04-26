@@ -5,7 +5,7 @@ import br.com.rk.controller.dto.ProjectResponse;
 import br.com.rk.controller.integration.AbstractControllerIntegrationTest;
 import br.com.rk.entities.audit.AuditType;
 import br.com.rk.util.builders.AuditBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
