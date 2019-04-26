@@ -160,14 +160,28 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
                 HttpStatus.NO_CONTENT,
                 "No entity found"));
 
-        for (final AuditDTO auditDTO : audits) {
-            doDeleteExpectStatus("/audit/" + auditDTO.getId(), HttpStatus.OK);
-        }
-
         final String findByExampleResponse = doPostExpectStatus(
                 "/audit/filter",
                 HttpStatus.NO_CONTENT,
-                AuditBuilder.initDTO().build());
+                AuditBuilder.initDTO().url("3sd1a65d16ad16as1d6sa15d56as1d56sad --- invalid url").build());
+
+        JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
+    }
+
+    @Test
+    public void should_return_correct_result_find_by_id() throws Exception {
+        final String expectedResponse = asJsonString(ProjectResponse.ok(audits.get(0)));
+
+        final String findByExampleResponse = doGetExpectStatus("/audit/" + audits.get(0).getId(), HttpStatus.OK);
+
+        JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
+    }
+
+    @Test
+    public void should_return_204_no_content_when_find_by_id_returns_nothing() throws Exception {
+        final String expectedResponse = asJsonString(ProjectResponse.error(HttpStatus.NO_CONTENT, "Entity with ID 9999 not found."));
+
+        final String findByExampleResponse = doGetExpectStatus("/audit/" + 9999, HttpStatus.NO_CONTENT);
 
         JSONAssert.assertEquals(expectedResponse, findByExampleResponse, false);
     }

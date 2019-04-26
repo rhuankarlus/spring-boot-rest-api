@@ -28,7 +28,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
 
     @Override
     public E findById(long id) throws ServiceException {
-        return projectRepository.findById(id).orElseThrow(() -> new ServiceException("Entity with ID " + id + " not found."));
+        return projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity with ID " + id + " not found."));
     }
 
     @Override
