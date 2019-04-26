@@ -203,7 +203,7 @@ public class ProjectResponse {
 
         return new Pagination(
                 page.getNumber(),
-                page.getSize(),
+                page.getNumberOfElements(),
                 page.getTotalElements(),
                 page.getTotalPages(),
                 page.getSort());

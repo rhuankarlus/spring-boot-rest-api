@@ -31,10 +31,12 @@ public class PageFactory {
         return PageRequest.of(page, size, sortObject);
     }
 
+    public static <T> Page<T> buildPage(final Supplier<T> randomObjectCreator) {
+        return buildPage(1, randomObjectCreator);
+    }
+
     public static <T> Page<T> buildPage(int size, final Supplier<T> randomObjectCreator) {
-        final List<T> content = new ArrayList<>();
-        IntStream.rangeClosed(1, size).forEach(value -> content.add(randomObjectCreator.get()));
-        return new PageImpl<>(content, buildPageable(size), size);
+        return buildPage(buildPageable(size), size, randomObjectCreator);
     }
 
     public static <T> Page<T> buildPage(final Pageable pageable, int size, final Supplier<T> randomObjectCreator) {

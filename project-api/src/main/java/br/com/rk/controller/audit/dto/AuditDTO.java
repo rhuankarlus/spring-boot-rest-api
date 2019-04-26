@@ -8,10 +8,19 @@ import br.com.rk.controller.dto.DTO;
  */
 public class AuditDTO implements DTO {
 
+    private Long id;
     private String url;
     private String content;
     private Integer type;
     private Long dateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUrl() {
         return url;

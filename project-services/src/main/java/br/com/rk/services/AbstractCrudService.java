@@ -2,6 +2,7 @@ package br.com.rk.services;
 
 import br.com.rk.entities.ProjectEntity;
 import br.com.rk.repositories.ProjectRepository;
+import br.com.rk.services.exception.EntityNotFoundException;
 import br.com.rk.services.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
 
     @Override
     public E findById(long id) throws ServiceException {
-        return projectRepository.findById(id).orElseThrow(() -> new ServiceException("Entity with ID " + id + " not found."));
+        return projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity with ID " + id + " not found."));
     }
 
     @Override
@@ -77,7 +78,12 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
     @Override
     public Page<E> findByExample(final E entity, final Pageable pageable) throws ServiceException {
         validateParams(entity, pageable);
-        return getProjectRepository().findAll(buildSpecifications(entity), pageable);
+        final Page<E> pageFiltered = getProjectRepository().findAll(buildSpecifications(entity), pageable);
+        if (pageFiltered == null || pageFiltered.getContent() == null || pageFiltered.getContent().size() == 0) {
+            throw new EntityNotFoundException("No entity found");
+        }
+
+        return pageFiltered;
     }
 
     protected abstract void validateParams(final E entity, final Pageable pageable) throws ServiceException;
