@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -105,6 +106,14 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
 
     @Test
     public void should_return_elements_ordered_find_all() throws Exception {
+        final AuditDTO audit5 = AuditBuilder
+                .initDTO()
+                .url("/path8")
+                .content("some content 5")
+                .type(AuditType.INFO)
+                .dateTime(LocalDateTime.parse("2019-02-22T21:02:47", DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .build();
+
         final AuditDTO audit6 = AuditBuilder
                 .initDTO()
                 .url("/")
