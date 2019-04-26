@@ -225,4 +225,19 @@ public class AuditITCase extends AbstractControllerIntegrationTest {
         JSONAssert.assertEquals(expectedResponse, updateAuditResponse, false);
     }
 
+    @Test
+    public void should_delete_entities_correctly() throws Exception {
+        for (final AuditDTO auditDTO : audits) {
+            doDeleteExpectStatus("/audit/" + auditDTO.getId(), HttpStatus.OK);
+
+            final String expectedResponse = asJsonString(ProjectResponse.error(
+                    HttpStatus.NO_CONTENT,
+                    "Entity with ID " + auditDTO.getId() + " not found."));
+
+            final String findByIdResponse = doGetExpectStatus("/audit/" + auditDTO.getId(), HttpStatus.NO_CONTENT);
+
+            JSONAssert.assertEquals(expectedResponse, findByIdResponse, false);
+        }
+    }
+
 }
