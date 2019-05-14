@@ -2,7 +2,7 @@ package br.com.rk.entities.user;
 
 import br.com.rk.entities.AbstractEntity;
 
-import javax.persistence.Column;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,7 +21,24 @@ public class User extends AbstractEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "user_permission",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
     private Set<Permission> permissions;
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> roles;
 
     public String getUsername() {

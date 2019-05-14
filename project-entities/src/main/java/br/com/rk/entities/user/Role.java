@@ -17,6 +17,9 @@ public class Role extends AbstractEntity {
     @Column(name = "name", unique = true, nullable = false, updatable = false)
     private String name;
 
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
+
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
@@ -33,6 +36,14 @@ public class Role extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public Set<Permission> getPermissions() {
