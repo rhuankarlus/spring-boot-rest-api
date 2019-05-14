@@ -3,6 +3,7 @@ package br.com.rk.entities.user;
 import br.com.rk.entities.AbstractEntity;
 
 import javax.persistence.Column;
+import javax.persistence.ManyToMany;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,7 +18,10 @@ public class Permission extends AbstractEntity {
     @Column(name = "name", unique = true, nullable = false, updatable = false)
     private String name;
 
+    @ManyToMany(mappedBy = "permissions")
     private Set<Role> roles;
+
+
     private Set<User> users;
 
     public String getName() {

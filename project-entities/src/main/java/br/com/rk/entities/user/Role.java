@@ -2,7 +2,7 @@ package br.com.rk.entities.user;
 
 import br.com.rk.entities.AbstractEntity;
 
-import javax.persistence.Column;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,6 +16,15 @@ public class Role extends AbstractEntity {
 
     @Column(name = "name", unique = true, nullable = false, updatable = false)
     private String name;
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "role_permission",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
     private Set<Permission> permissions;
 
     public String getName() {
