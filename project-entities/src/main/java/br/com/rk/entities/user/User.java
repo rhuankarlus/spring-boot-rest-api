@@ -2,7 +2,7 @@ package br.com.rk.entities.user;
 
 import br.com.rk.entities.AbstractEntity;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * User domain for the whole application.
@@ -15,8 +15,8 @@ public class User extends AbstractEntity {
 
     private String username;
     private String password;
-    private List<Permission> permissions;
-    private List<Role> roles;
+    private Set<Permission> permissions;
+    private Set<Role> roles;
 
     public String getUsername() {
         return username;
@@ -34,19 +34,19 @@ public class User extends AbstractEntity {
         this.password = password;
     }
 
-    public List<Permission> getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 }

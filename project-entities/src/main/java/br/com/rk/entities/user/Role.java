@@ -2,7 +2,7 @@ package br.com.rk.entities.user;
 
 import br.com.rk.entities.AbstractEntity;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * System security roles
@@ -13,7 +13,7 @@ import java.util.List;
 public class Role extends AbstractEntity {
 
     private String name;
-    private List<Permission> permissions;
+    private Set<Permission> permissions;
 
     public String getName() {
         return name;
@@ -23,11 +23,11 @@ public class Role extends AbstractEntity {
         this.name = name;
     }
 
-    public List<Permission> getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 }
