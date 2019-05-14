@@ -2,6 +2,8 @@ package br.com.rk.entities.user;
 
 import br.com.rk.entities.AbstractEntity;
 
+import javax.persistence.Column;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -13,8 +15,12 @@ import java.util.Set;
  */
 public class User extends AbstractEntity {
 
+    @Column(name = "username", unique = true, nullable = false, updatable = false)
     private String username;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
     private Set<Permission> permissions;
     private Set<Role> roles;
 
@@ -48,5 +54,18 @@ public class User extends AbstractEntity {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
     }
 }
