@@ -4,6 +4,7 @@ import br.com.rk.entities.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
  * @since 22/03/19
  */
 @Entity
+@Table(name = "audit")
 public class Audit extends AbstractEntity {
 
     @Column(name = "url")
