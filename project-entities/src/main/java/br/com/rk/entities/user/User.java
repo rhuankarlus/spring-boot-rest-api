@@ -1,6 +1,8 @@
 package br.com.rk.entities.user;
 
 import br.com.rk.entities.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -13,6 +15,8 @@ import java.util.Set;
  * @author Rhuan Karlus
  * @since 5/13/2019
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "user")
 public class User extends AbstractEntity {
@@ -42,38 +46,6 @@ public class User extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Permission> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(Set<Permission> permissions) {
-        this.permissions = permissions;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 
     @Override
     public boolean equals(Object o) {

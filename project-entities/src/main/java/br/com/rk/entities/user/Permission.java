@@ -1,6 +1,8 @@
 package br.com.rk.entities.user;
 
 import br.com.rk.entities.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +17,8 @@ import java.util.Set;
  * @author Rhuan Karlus
  * @since 5/13/19
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "permission")
 public class Permission extends AbstractEntity {
@@ -27,30 +31,6 @@ public class Permission extends AbstractEntity {
 
     @ManyToMany(mappedBy = "permissions")
     private Set<User> users;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
 
     @Override
     public boolean equals(Object o) {
