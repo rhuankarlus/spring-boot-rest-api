@@ -42,14 +42,12 @@ public class AuditConversor implements Conversor<AuditDTO, Audit> {
 
     @Override
     public AuditDTO toDTO(final Audit audit) {
-        return AuditDTO
-                .builder()
-                .id(audit.getId())
-                .url(audit.getUrl())
-                .content(audit.getContent())
-                .type(audit.getType().getCode())
-                .dateTime(audit.getDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-                .build();
+        return new AuditDTO()
+                .setId(audit.getId())
+                .setUrl(audit.getUrl())
+                .setContent(audit.getContent())
+                .setType(audit.getType().getCode())
+                .setDateTime(audit.getDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
     }
 
 }

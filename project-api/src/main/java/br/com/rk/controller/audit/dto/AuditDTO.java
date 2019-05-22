@@ -1,15 +1,19 @@
 package br.com.rk.controller.audit.dto;
 
 import br.com.rk.controller.dto.DTO;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * @author Rhuan Karlus
  * @since 27/03/19
  */
 @Getter
-@Builder
+@Setter
+@Accessors(chain = true)
+@NoArgsConstructor
 public class AuditDTO implements DTO {
 
     private Long id;
