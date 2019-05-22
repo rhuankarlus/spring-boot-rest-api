@@ -1,6 +1,7 @@
 package br.com.rk.entities.audit;
 
 import br.com.rk.exceptions.EnumNotFoundException;
+import lombok.Getter;
 
 import java.util.Arrays;
 
@@ -8,6 +9,7 @@ import java.util.Arrays;
  * @author Rhuan Karlus
  * @since 22/03/19
  */
+@Getter
 public enum AuditType {
 
     ERROR(1, "Error"),
@@ -32,19 +34,4 @@ public enum AuditType {
                 .orElseThrow(() -> new EnumNotFoundException("The code " + code + " doesn't belong to any constant."));
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

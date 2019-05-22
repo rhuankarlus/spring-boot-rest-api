@@ -1,6 +1,9 @@
 package br.com.rk.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -12,15 +15,15 @@ import java.util.List;
  * @author Rhuan Karlus
  * @since 06/03/2019
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectResponse {
 
     private Metadata metadata;
     private Object content;
     private Pagination pagination;
-
-    public ProjectResponse() {
-    }
 
     public ProjectResponse(Object content) {
         this.content = content;
@@ -48,6 +51,8 @@ public class ProjectResponse {
      * @see <a href="https://www.baeldung.com/global-error-handler-in-a-spring-rest-api">
      * https://www.baeldung.com/global-error-handler-in-a-spring-rest-api</a>
      */
+    @Getter
+    @Setter
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Metadata {
 
@@ -75,34 +80,14 @@ public class ProjectResponse {
             errors = Collections.singletonList(error);
         }
 
-        public HttpStatus getStatus() {
-            return status;
-        }
-
-        public void setStatus(HttpStatus status) {
-            this.status = status;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public List<String> getErrors() {
-            return errors;
-        }
-
-        public void setErrors(List<String> errors) {
-            this.errors = errors;
-        }
     }
 
     /**
      * Show searchs pagination
      */
+    @Getter
+    @Setter
+    @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Pagination {
 
@@ -112,9 +97,6 @@ public class ProjectResponse {
         private int totalPages;
         private Sort sort;
 
-        public Pagination() {
-        }
-
         public Pagination(int pageNumber, int elementsInPage, long totalElements, int totalPages, Sort sort) {
             this.pageNumber = pageNumber;
             this.elementsInPage = elementsInPage;
@@ -123,45 +105,6 @@ public class ProjectResponse {
             this.sort = sort;
         }
 
-        public int getPageNumber() {
-            return pageNumber;
-        }
-
-        public int getElementsInPage() {
-            return elementsInPage;
-        }
-
-        public long getTotalElements() {
-            return totalElements;
-        }
-
-        public long getTotalPages() {
-            return totalPages;
-        }
-
-        public Sort getSort() {
-            return sort;
-        }
-
-        public void setPageNumber(int pageNumber) {
-            this.pageNumber = pageNumber;
-        }
-
-        public void setElementsInPage(int elementsInPage) {
-            this.elementsInPage = elementsInPage;
-        }
-
-        public void setTotalElements(long totalElements) {
-            this.totalElements = totalElements;
-        }
-
-        public void setTotalPages(int totalPages) {
-            this.totalPages = totalPages;
-        }
-
-        public void setSort(Sort sort) {
-            this.sort = sort;
-        }
     }
 
     public static ProjectResponse ok(final Object content) {
@@ -209,27 +152,4 @@ public class ProjectResponse {
                 page.getSort());
     }
 
-    public Metadata getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(Metadata metadata) {
-        this.metadata = metadata;
-    }
-
-    public Object getContent() {
-        return content;
-    }
-
-    public void setContent(Object content) {
-        this.content = content;
-    }
-
-    public Pagination getPagination() {
-        return pagination;
-    }
-
-    public void setPagination(Pagination pagination) {
-        this.pagination = pagination;
-    }
 }

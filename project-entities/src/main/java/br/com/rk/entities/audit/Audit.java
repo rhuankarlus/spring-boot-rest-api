@@ -1,6 +1,8 @@
 package br.com.rk.entities.audit;
 
 import br.com.rk.entities.AbstractEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
  * @author Rhuan Karlus
  * @since 22/03/19
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "audit")
 public class Audit extends AbstractEntity {
@@ -27,35 +31,4 @@ public class Audit extends AbstractEntity {
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public AuditType getType() {
-        return type;
-    }
-
-    public void setType(AuditType type) {
-        this.type = type;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
 }
