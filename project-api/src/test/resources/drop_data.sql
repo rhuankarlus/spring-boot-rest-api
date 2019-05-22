@@ -1,1 +1,4 @@
 DELETE FROM audit; ALTER SEQUENCE id_seq_audit RESTART WITH 1;
+DELETE FROM permission; ALTER SEQUENCE id_seq_permission RESTART WITH 1;
+DELETE FROM role; ALTER SEQUENCE id_seq_role RESTART WITH 1;
+DELETE FROM role_permission; ALTER SEQUENCE id_seq_role_permission RESTART WITH 1;

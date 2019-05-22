@@ -12,6 +12,8 @@ import java.util.Set;
  * @author Rhuan Karlus
  * @since 5/13/19
  */
+@Entity
+@Table(name = "role")
 public class Role extends AbstractEntity {
 
     @Column(name = "name", unique = true, nullable = false, updatable = false)

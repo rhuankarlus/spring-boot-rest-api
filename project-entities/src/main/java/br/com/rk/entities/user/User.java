@@ -13,6 +13,8 @@ import java.util.Set;
  * @author Rhuan Karlus
  * @since 5/13/2019
  */
+@Entity
+@Table(name = "user")
 public class User extends AbstractEntity {
 
     @Column(name = "username", unique = true, nullable = false, updatable = false)

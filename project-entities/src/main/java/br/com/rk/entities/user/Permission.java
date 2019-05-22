@@ -3,7 +3,9 @@ package br.com.rk.entities.user;
 import br.com.rk.entities.AbstractEntity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,6 +15,8 @@ import java.util.Set;
  * @author Rhuan Karlus
  * @since 5/13/19
  */
+@Entity
+@Table(name = "permission")
 public class Permission extends AbstractEntity {
 
     @Column(name = "name", unique = true, nullable = false, updatable = false)
