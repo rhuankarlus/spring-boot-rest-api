@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * This repository is usefull when you have a read only bean. In this case your repository can implement this interface
- * in order to don't allow naughty developers to update/delete those properties.
+ * in order to prevent naughty developers to update/delete those properties.
  *
  * @author Rhuan Karlus
  * @since 5/23/19
