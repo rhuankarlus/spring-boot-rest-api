@@ -9,8 +9,8 @@ import br.com.rk.repositories.specifications.string.Operation;
  */
 public class RoleNameSpecification extends NameSpecification<Role> {
 
-    public RoleNameSpecification(Operation operation, String value) {
-        super(operation, value);
+    public RoleNameSpecification(Operation operation, String role) {
+        super(operation, role);
     }
 
 }

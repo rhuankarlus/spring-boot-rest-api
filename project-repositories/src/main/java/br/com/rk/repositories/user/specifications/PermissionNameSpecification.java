@@ -9,8 +9,8 @@ import br.com.rk.repositories.specifications.string.Operation;
  */
 public class PermissionNameSpecification extends NameSpecification<Permission> {
 
-    public PermissionNameSpecification(Operation operation, String value) {
-        super(operation, value);
+    public PermissionNameSpecification(Operation operation, String permission) {
+        super(operation, permission);
     }
 
 }

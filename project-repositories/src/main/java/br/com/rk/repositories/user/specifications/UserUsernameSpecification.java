@@ -18,18 +18,18 @@ public class UserUsernameSpecification extends AbstractStringFieldSpecification<
     /**
      * Searchs for a user with the value passed, using {@link Operation#EQ}
      *
-     * @param value The value to be search
+     * @param username The value to be search
      */
-    public UserUsernameSpecification(final String value) {
-        this.nameSearchCriteria = new StringSearchCriteria(USERNAME, Operation.EQ, value);
+    public UserUsernameSpecification(final String username) {
+        this.nameSearchCriteria = new StringSearchCriteria(USERNAME, Operation.EQ, username);
     }
 
     /**
      * @param operation The required operation
-     * @param value     The value to search for
+     * @param username  The value to search for
      */
-    public UserUsernameSpecification(final Operation operation, final String value) {
-        this.nameSearchCriteria = new StringSearchCriteria(USERNAME, operation, value);
+    public UserUsernameSpecification(final Operation operation, final String username) {
+        this.nameSearchCriteria = new StringSearchCriteria(USERNAME, operation, username);
     }
 
     @Override
