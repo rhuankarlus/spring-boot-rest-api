@@ -1,6 +1,8 @@
 package br.com.rk.services.user.impl;
 
 import br.com.rk.entities.user.Permission;
+import br.com.rk.repositories.specifications.string.Operation;
+import br.com.rk.repositories.user.specifications.PermissionNameSpecification;
 import br.com.rk.services.AbstractCrudService;
 import br.com.rk.services.user.PermissionCrudService;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,7 +15,7 @@ public class PermissionCrudServiceImpl extends AbstractCrudService<Permission> i
 
     @Override
     protected Specification<Permission> buildAllSpecifications(Permission permission) {
-        return null;
+        return Specification.where(new PermissionNameSpecification(Operation.EQ, permission.getName()));
     }
 
 }
