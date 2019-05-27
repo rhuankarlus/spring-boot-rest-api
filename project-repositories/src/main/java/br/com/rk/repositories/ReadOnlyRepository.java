@@ -2,6 +2,7 @@ package br.com.rk.repositories;
 
 import br.com.rk.entities.ProjectEntity;
 import br.com.rk.repositories.exception.PersistenceMethodNotAllowedException;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @author Rhuan Karlus
  * @since 5/23/19
  */
+@NoRepositoryBean
 public interface ReadOnlyRepository<E extends ProjectEntity> extends ProjectRepository<E> {
 
     /**
