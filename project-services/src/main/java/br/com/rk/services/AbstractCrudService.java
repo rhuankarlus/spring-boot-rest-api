@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -93,7 +94,14 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
      * @param pageable Pageable object to slice results from database
      * @throws ServiceException If any error occurs or if some incongruence was found
      */
-    protected abstract void validateBeforeFindExample(final E entity, final Pageable pageable) throws ServiceException;
+    protected void validateBeforeFindExample(final E entity, final Pageable pageable) throws ServiceException {
+        try {
+            Assert.notNull(entity, "The entity object can't be null.");
+            Assert.notNull(pageable, "The pageable object can't be null.");
+        } catch (Exception e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
 
     /**
      * Build all specifications in order to find this entity.

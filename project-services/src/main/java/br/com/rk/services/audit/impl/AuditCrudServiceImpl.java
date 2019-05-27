@@ -7,8 +7,6 @@ import br.com.rk.repositories.audit.specifications.UrlSpecification;
 import br.com.rk.repositories.specifications.string.Operation;
 import br.com.rk.services.AbstractCrudService;
 import br.com.rk.services.audit.AuditCrudService;
-import br.com.rk.services.exception.ServiceException;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +18,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AuditCrudServiceImpl extends AbstractCrudService<Audit> implements AuditCrudService {
-
-    @Override
-    protected void validateBeforeFindExample(Audit audit, Pageable pageable) throws ServiceException {
-        if (audit == null) {
-            throw new ServiceException("The audit object can't be null.");
-        }
-
-        if (pageable == null) {
-            throw new ServiceException("The pageable object can't be null.");
-        }
-    }
 
     @Override
     protected Specification<Audit> buildAllSpecifications(final Audit audit) {

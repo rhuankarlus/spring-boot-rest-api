@@ -252,4 +252,36 @@ public class AbstractCrudServiceTest {
         verify(mockRepo, times(1)).findAll(pageable);
     }
 
+    @Test
+    public void should_throw_exception_when_entity_is_null_before_find_by_example() throws ServiceException {
+        doCallRealMethod()
+                .when(sut)
+                .findByExample(any(ProjectEntity.class), any(Pageable.class));
+
+        doCallRealMethod()
+                .when(sut)
+                .validateBeforeFindExample(any(ProjectEntity.class), any(Pageable.class));
+
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.findByExample(null, null));
+
+        assertEquals("The entity object can't be null.", expectedException.getLocalizedMessage());
+    }
+
+    @Test
+    public void should_throw_exception_when_pageable_is_null_before_find_by_example() throws ServiceException {
+        doCallRealMethod()
+                .when(sut)
+                .findByExample(any(ProjectEntity.class), any(Pageable.class));
+
+        doCallRealMethod()
+                .when(sut)
+                .validateBeforeFindExample(any(ProjectEntity.class), any(Pageable.class));
+
+        final ServiceException expectedException =
+                assertThrows(ServiceException.class, () -> sut.findByExample(ProjectEntityFactory.buildSimpleEntityWithoutId(), null));
+
+        assertEquals("The pageable object can't be null.", expectedException.getMessage());
+    }
+
 }
