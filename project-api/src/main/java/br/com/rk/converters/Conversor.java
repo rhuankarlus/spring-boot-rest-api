@@ -2,7 +2,6 @@ package br.com.rk.converters;
 
 import br.com.rk.controller.dto.DTO;
 import br.com.rk.entities.ProjectEntity;
-import br.com.rk.exceptions.EnumNotFoundException;
 
 /**
  * @author Rhuan Karlus

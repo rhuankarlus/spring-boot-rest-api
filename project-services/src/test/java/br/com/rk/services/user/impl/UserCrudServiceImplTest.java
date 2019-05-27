@@ -1,6 +1,5 @@
 package br.com.rk.services.user.impl;
 
-import br.com.rk.entities.audit.Audit;
 import br.com.rk.entities.user.User;
 import br.com.rk.services.exception.ServiceException;
 import org.junit.jupiter.api.BeforeEach;
