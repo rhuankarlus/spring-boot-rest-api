@@ -1,4 +1,4 @@
-package br.com.rk.services.Permission.impl;
+package br.com.rk.services.user.impl;
 
 import br.com.rk.entities.user.Permission;
 import br.com.rk.services.AbstractCrudService;
