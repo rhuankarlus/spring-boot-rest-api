@@ -24,7 +24,7 @@ public class AuditCrudServiceImplTest {
     @Test
     public void should_throw_exception_when_audit_is_null() {
         final ServiceException expectedException =
-                assertThrows(ServiceException.class, () -> sut.validateParams(null, null));
+                assertThrows(ServiceException.class, () -> sut.validateBeforeFindExample(null, null));
 
         assertEquals("The audit object can't be null.", expectedException.getMessage());
     }
@@ -32,7 +32,7 @@ public class AuditCrudServiceImplTest {
     @Test
     public void should_throw_exception_when_pageable_is_null() {
         final ServiceException expectedException =
-                assertThrows(ServiceException.class, () -> sut.validateParams(new Audit(), null));
+                assertThrows(ServiceException.class, () -> sut.validateBeforeFindExample(new Audit(), null));
 
         assertEquals("The pageable object can't be null.", expectedException.getMessage());
     }

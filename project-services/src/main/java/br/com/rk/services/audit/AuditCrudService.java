@@ -9,6 +9,6 @@ import br.com.rk.services.ProjectCrudService;
  * @author Rhuan Karlus
  * @since 26/03/19
  */
-public interface AuditProjectCrudService extends ProjectCrudService<Audit> {
+public interface AuditCrudService extends ProjectCrudService<Audit> {
 
 }

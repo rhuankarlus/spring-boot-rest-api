@@ -77,8 +77,8 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
 
     @Override
     public Page<E> findByExample(final E entity, final Pageable pageable) throws ServiceException {
-        validateParams(entity, pageable);
-        final Page<E> pageFiltered = getProjectRepository().findAll(buildSpecifications(entity), pageable);
+        validateBeforeFindExample(entity, pageable);
+        final Page<E> pageFiltered = getProjectRepository().findAll(buildAllSpecifications(entity), pageable);
         if (pageFiltered == null || pageFiltered.getContent() == null || pageFiltered.getContent().size() == 0) {
             throw new EntityNotFoundException("No entity found");
         }
@@ -86,8 +86,21 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
         return pageFiltered;
     }
 
-    protected abstract void validateParams(final E entity, final Pageable pageable) throws ServiceException;
+    /**
+     * Validates all parameters from entity and pageable objects before send them to the findByExample repository method.
+     *
+     * @param entity   Entity that will be validated
+     * @param pageable Pageable object to slice results from database
+     * @throws ServiceException If any error occurs or if some incongruence was found
+     */
+    protected abstract void validateBeforeFindExample(final E entity, final Pageable pageable) throws ServiceException;
 
-    protected abstract Specification<E> buildSpecifications(final E entity);
+    /**
+     * Build all specifications in order to find this entity.
+     *
+     * @param entity The entity that will be search
+     * @return The specifications chain
+     */
+    protected abstract Specification<E> buildAllSpecifications(final E entity);
 
 }
