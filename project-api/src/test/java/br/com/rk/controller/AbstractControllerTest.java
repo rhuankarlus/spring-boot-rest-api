@@ -9,7 +9,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
@@ -23,9 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Rhuan Karlus
  * @since 11/04/2019
  */
-@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
 @EnableSpringDataWebSupport
-@TestPropertySource(locations = "classpath:application-test.properties")
+@ExtendWith(SpringExtension.class)
 public abstract class AbstractControllerTest {
 
     private static final String PAGE_PARAM = "page";
@@ -150,3 +150,4 @@ public abstract class AbstractControllerTest {
     }
 
 }
+

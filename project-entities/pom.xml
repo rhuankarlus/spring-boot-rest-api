@@ -12,6 +12,17 @@
 
     <artifactId>project-entities</artifactId>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>br.com.rk</groupId>
