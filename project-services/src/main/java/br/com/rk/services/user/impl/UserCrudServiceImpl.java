@@ -9,6 +9,7 @@ import br.com.rk.services.AbstractCrudService;
 import br.com.rk.services.user.UserCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,10 +22,12 @@ import java.util.Optional;
 public class UserCrudServiceImpl extends AbstractCrudService<User> implements UserCrudService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserCrudServiceImpl(UserRepository userRepository) {
+    public UserCrudServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class UserCrudServiceImpl extends AbstractCrudService<User> implements Us
     protected Specification<User> buildAllSpecifications(User user) {
         return Specification
                 .where(new UserUsernameSpecification(Operation.EQ, user.getUsername()))
-                .and(new UserPasswordSpecification(Operation.EQ, encrypt(user.getPassword())));
+                .and(new UserPasswordSpecification(Operation.EQ, passwordEncoder.encode(user.getPassword())));
     }
 
     @Override
@@ -46,11 +49,7 @@ public class UserCrudServiceImpl extends AbstractCrudService<User> implements Us
 
     @Override
     public Optional<User> findByUsernameAndPassword(String username, String password) {
-        return getRepository().findByUsernameAndPassword(username, encrypt(password));
-    }
-
-    private String encrypt(String password) {
-        return null;
+        return getRepository().findByUsernameAndPassword(username, passwordEncoder.encode(password));
     }
 
 }
