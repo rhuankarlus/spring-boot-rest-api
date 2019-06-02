@@ -7,6 +7,8 @@ import br.com.rk.services.AbstractCrudService;
 import br.com.rk.services.user.RoleCrudService;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Optional;
+
 /**
  * @author Rhuan Karlus
  * @since 5/27/19
@@ -18,4 +20,13 @@ public class RoleCrudServiceImpl extends AbstractCrudService<Role> implements Ro
         return Specification.where(new RoleNameSpecification(Operation.EQ, role.getName()));
     }
 
+    @Override
+    public Optional<Role> findByName(String name) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Role> findByName(String name, Operation comparisonOperation) {
+        return Optional.empty();
+    }
 }

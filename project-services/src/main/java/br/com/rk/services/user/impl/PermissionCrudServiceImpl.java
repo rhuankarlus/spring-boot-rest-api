@@ -7,6 +7,8 @@ import br.com.rk.services.AbstractCrudService;
 import br.com.rk.services.user.PermissionCrudService;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Optional;
+
 /**
  * @author Rhuan Karlus
  * @since 5/27/19
@@ -18,4 +20,13 @@ public class PermissionCrudServiceImpl extends AbstractCrudService<Permission> i
         return Specification.where(new PermissionNameSpecification(Operation.EQ, permission.getName()));
     }
 
+    @Override
+    public Optional<Permission> findByName(String name) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Permission> findByName(String name, Operation comparisonOperation) {
+        return Optional.empty();
+    }
 }

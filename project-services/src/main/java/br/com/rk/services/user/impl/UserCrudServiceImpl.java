@@ -8,6 +8,8 @@ import br.com.rk.services.AbstractCrudService;
 import br.com.rk.services.user.UserCrudService;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Optional;
+
 /**
  * @author Rhuan Karlus
  * @since 5/27/19
@@ -19,6 +21,16 @@ public class UserCrudServiceImpl extends AbstractCrudService<User> implements Us
         return Specification
                 .where(new UserUsernameSpecification(Operation.EQ, user.getUsername()))
                 .and(new UserPasswordSpecification(Operation.EQ, encrypt(user.getPassword())));
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByUsernameAndPassword(String username, String password) {
+        return Optional.empty();
     }
 
     private String encrypt(String password) {
