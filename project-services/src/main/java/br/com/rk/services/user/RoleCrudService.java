@@ -4,6 +4,7 @@ import br.com.rk.entities.user.Role;
 import br.com.rk.repositories.specifications.string.Operation;
 import br.com.rk.services.ProjectCrudService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,13 +23,13 @@ public interface RoleCrudService extends ProjectCrudService<Role> {
     Optional<Role> findByName(String name);
 
     /**
-     * Search for the Role containing the given name using the specified operation
+     * Search for all the Role containing the given name using the specified operation
      *
      * @param name                The role's name
      * @param comparisonOperation The operation used to compare the name
-     * @return An optional containing the role with the given name found using the operation or empty
+     * @return An optional containing all the role with the given name found using the operation or empty
      * @see Operation
      */
-    Optional<Role> findByName(String name, Operation comparisonOperation);
+    Optional<List<Role>> findByName(String name, Operation comparisonOperation);
 
 }

@@ -4,6 +4,7 @@ import br.com.rk.entities.user.Permission;
 import br.com.rk.repositories.specifications.string.Operation;
 import br.com.rk.services.ProjectCrudService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,13 +23,13 @@ public interface PermissionCrudService extends ProjectCrudService<Permission> {
     Optional<Permission> findByName(String name);
 
     /**
-     * Search for the permission containing the given name using the specified operation
+     * Search for all the permissions containing the given name using the specified operation
      *
      * @param name                The permission's name
      * @param comparisonOperation The operation used to compare the name
-     * @return An optional containing the permission with the given name found using the operation or empty
+     * @return An optional containing all the permissions with the given name found using the operation or empty
      * @see Operation
      */
-    Optional<Permission> findByName(String name, Operation comparisonOperation);
+    Optional<List<Permission>> findByName(String name, Operation comparisonOperation);
 
 }

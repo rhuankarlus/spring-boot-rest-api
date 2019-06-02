@@ -4,7 +4,6 @@ import br.com.rk.entities.ProjectEntity;
 import br.com.rk.repositories.ProjectRepository;
 import br.com.rk.services.exception.EntityNotFoundException;
 import br.com.rk.services.exception.ServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,16 +19,25 @@ import java.util.List;
  */
 public abstract class AbstractCrudService<E extends ProjectEntity> implements ProjectCrudService<E> {
 
-    @Autowired
-    private ProjectRepository<E> projectRepository;
+    /**
+     * Gets the project repository for this specific service
+     *
+     * @param <R> The typed repository to retrieve
+     * @return The injected repository
+     */
+    protected abstract ProjectRepository<E> getRepository();
 
-    protected ProjectRepository<E> getProjectRepository() {
-        return projectRepository;
-    }
+    /**
+     * Build all specifications in order to find this entity.
+     *
+     * @param entity The entity that will be search
+     * @return The specifications chain
+     */
+    protected abstract Specification<E> buildAllSpecifications(final E entity);
 
     @Override
     public E findById(long id) throws ServiceException {
-        return projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity with ID " + id + " not found."));
+        return getRepository().findById(id).orElseThrow(() -> new EntityNotFoundException("Entity with ID " + id + " not found."));
     }
 
     @Override
@@ -39,7 +47,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
         }
 
         try {
-            return projectRepository.save(entidade);
+            return getRepository().save(entidade);
         } catch (Exception e) {
             throw new ServiceException("Error trying to persist entity", e);
         }
@@ -48,7 +56,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
     @Override
     public void delete(long id) throws ServiceException {
         try {
-            projectRepository.deleteById(id);
+            getRepository().deleteById(id);
         } catch (Exception e) {
             throw new ServiceException("Error trying to delete the entity", e);
         }
@@ -57,7 +65,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
     @Override
     public List<E> findAll() throws ServiceException {
         try {
-            return projectRepository.findAll();
+            return getRepository().findAll();
         } catch (Exception e) {
             throw new ServiceException("Error when trying to read the entities list from database", e);
         }
@@ -70,7 +78,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
         }
 
         try {
-            return projectRepository.findAll(pageable);
+            return getRepository().findAll(pageable);
         } catch (Exception e) {
             throw new ServiceException("Error when trying to read the entities page from database", e);
         }
@@ -79,7 +87,7 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
     @Override
     public Page<E> findByExample(final E entity, final Pageable pageable) throws ServiceException {
         validateBeforeFindExample(entity, pageable);
-        final Page<E> pageFiltered = getProjectRepository().findAll(buildAllSpecifications(entity), pageable);
+        final Page<E> pageFiltered = getRepository().findAll(buildAllSpecifications(entity), pageable);
         if (pageFiltered == null || pageFiltered.getContent() == null || pageFiltered.getContent().size() == 0) {
             throw new EntityNotFoundException("No entity found");
         }
@@ -102,13 +110,5 @@ public abstract class AbstractCrudService<E extends ProjectEntity> implements Pr
             throw new ServiceException(e.getMessage(), e);
         }
     }
-
-    /**
-     * Build all specifications in order to find this entity.
-     *
-     * @param entity The entity that will be search
-     * @return The specifications chain
-     */
-    protected abstract Specification<E> buildAllSpecifications(final E entity);
 
 }

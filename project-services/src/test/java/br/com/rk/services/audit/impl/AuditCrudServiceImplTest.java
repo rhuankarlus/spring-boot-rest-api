@@ -1,9 +1,12 @@
 package br.com.rk.services.audit.impl;
 
 import br.com.rk.entities.audit.Audit;
+import br.com.rk.repositories.audit.AuditRepository;
+import br.com.rk.services.ProjectCrudService;
 import br.com.rk.services.exception.ServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,7 +21,7 @@ public class AuditCrudServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        sut = new AuditCrudServiceImpl();
+        sut = new AuditCrudServiceImpl(Mockito.mock(AuditRepository.class));
     }
 
     @Test

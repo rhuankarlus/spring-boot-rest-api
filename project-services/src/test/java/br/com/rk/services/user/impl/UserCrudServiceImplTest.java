@@ -1,9 +1,11 @@
 package br.com.rk.services.user.impl;
 
 import br.com.rk.entities.user.User;
+import br.com.rk.repositories.user.UserRepository;
 import br.com.rk.services.exception.ServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,7 +20,7 @@ public class UserCrudServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        sut = new UserCrudServiceImpl();
+        sut = new UserCrudServiceImpl(Mockito.mock(UserRepository.class));
     }
 
     @Test

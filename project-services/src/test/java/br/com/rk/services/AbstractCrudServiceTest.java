@@ -37,7 +37,7 @@ public class AbstractCrudServiceTest {
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findById(id)).thenReturn(Optional.empty());
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -58,7 +58,7 @@ public class AbstractCrudServiceTest {
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findById(id)).thenReturn(Optional.of(projectEntity));
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -89,7 +89,7 @@ public class AbstractCrudServiceTest {
         final ProjectEntity projectEntity = ProjectEntityFactory.buildSimpleEntityWithId(1L);
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.save(projectEntity)).thenThrow(Exception.class);
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -112,7 +112,7 @@ public class AbstractCrudServiceTest {
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.save(projectEntity)).thenReturn(projectEntityWithId);
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -131,7 +131,7 @@ public class AbstractCrudServiceTest {
         final long id = 1L;
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         doThrow(Exception.class).when(mockRepo).deleteById(isA(Long.class));
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -151,7 +151,7 @@ public class AbstractCrudServiceTest {
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         doNothing().when(mockRepo).deleteById(id);
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -166,7 +166,7 @@ public class AbstractCrudServiceTest {
     public void should_throw_exception_when_find_all_fail() throws ServiceException {
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findAll()).thenThrow(Exception.class);
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -187,7 +187,7 @@ public class AbstractCrudServiceTest {
 
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findAll()).thenReturn(projectEntityList);
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -218,7 +218,7 @@ public class AbstractCrudServiceTest {
         final Pageable pageable = PageFactory.buildSimplePageable();
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findAll(any(Pageable.class))).thenThrow(Exception.class);
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
@@ -238,7 +238,7 @@ public class AbstractCrudServiceTest {
         final Pageable pageable = PageFactory.buildSimplePageable();
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
         when(mockRepo.findAll(any(Pageable.class))).thenReturn(projectEntitiesPage);
-        Whitebox.setInternalState(sut, "projectRepository", mockRepo);
+        when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
                 .when(sut)
