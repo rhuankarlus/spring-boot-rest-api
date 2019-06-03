@@ -1,26 +1,28 @@
-package br.com.rk.services.user.impl;
+package br.com.rk.services.unit.user.impl;
 
-import br.com.rk.entities.user.Permission;
-import br.com.rk.repositories.user.PermissionRepository;
+import br.com.rk.entities.user.User;
+import br.com.rk.repositories.user.UserRepository;
 import br.com.rk.services.exception.ServiceException;
+import br.com.rk.services.user.impl.UserCrudServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Rhuan Karlus
  * @since 04/04/19
  */
-public class PermissionCrudServiceImplTest {
+public class UserCrudServiceImplTest {
 
-    private PermissionCrudServiceImpl sut;
+    private UserCrudServiceImpl sut;
 
     @BeforeEach
     public void setUp() {
-        sut = new PermissionCrudServiceImpl(Mockito.mock(PermissionRepository.class));
+        sut = new UserCrudServiceImpl(mock(UserRepository.class), mock(PasswordEncoder.class));
     }
 
     @Test
@@ -34,7 +36,7 @@ public class PermissionCrudServiceImplTest {
     @Test
     public void should_throw_exception_when_pageable_is_null() {
         final ServiceException expectedException =
-                assertThrows(ServiceException.class, () -> sut.findByExample(new Permission(), null));
+                assertThrows(ServiceException.class, () -> sut.findByExample(new User(), null));
 
         assertEquals("The pageable object can't be null.", expectedException.getMessage());
     }

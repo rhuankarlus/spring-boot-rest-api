@@ -1,8 +1,9 @@
-package br.com.rk.services.audit.impl;
+package br.com.rk.services.unit.audit.impl;
 
 import br.com.rk.entities.audit.Audit;
 import br.com.rk.repositories.audit.AuditRepository;
 import br.com.rk.services.ProjectCrudService;
+import br.com.rk.services.audit.impl.AuditCrudServiceImpl;
 import br.com.rk.services.exception.ServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

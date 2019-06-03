@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Rhuan Karlus
  * @since 11/04/2019
  */
-@ActiveProfiles("test")
 @EnableSpringDataWebSupport
 @ExtendWith(SpringExtension.class)
 public abstract class AbstractControllerTest {

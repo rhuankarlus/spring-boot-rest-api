@@ -1,15 +1,16 @@
-package br.com.rk.services;
+package br.com.rk.services.unit;
 
 import br.com.rk.entities.ProjectEntity;
 import br.com.rk.repositories.ProjectRepository;
+import br.com.rk.services.AbstractCrudService;
 import br.com.rk.services.exception.ServiceException;
 import br.com.rk.services.factory.PageFactory;
 import br.com.rk.services.factory.ProjectEntityFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +25,62 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("unchecked")
 public class AbstractCrudServiceTest {
 
-    private AbstractCrudService sut;
+    private AbstractCrudServiceTestImpl sut;
+
+    /**
+     * This is the class used to test the abstraction.
+     * With this we don't need to use reflection to override methods and fields implementations
+     */
+    private class AbstractCrudServiceTestImpl extends AbstractCrudService {
+        @Override
+        protected ProjectRepository getRepository() {
+            return null;
+        }
+
+        @Override
+        protected Specification buildAllSpecifications(ProjectEntity entity) {
+            return null;
+        }
+
+        @Override
+        public ProjectEntity findById(long id) throws ServiceException {
+            return super.findById(id);
+        }
+
+        @Override
+        public ProjectEntity persist(ProjectEntity entidade) throws ServiceException {
+            return super.persist(entidade);
+        }
+
+        @Override
+        public void delete(long id) throws ServiceException {
+            super.delete(id);
+        }
+
+        @Override
+        public List findAll() throws ServiceException {
+            return super.findAll();
+        }
+
+        @Override
+        public Page findAll(Pageable pageable) throws ServiceException {
+            return super.findAll(pageable);
+        }
+
+        @Override
+        public Page findByExample(ProjectEntity entity, Pageable pageable) throws ServiceException {
+            return super.findByExample(entity, pageable);
+        }
+
+        @Override
+        public void validateBeforeFindExample(ProjectEntity entity, Pageable pageable) throws ServiceException {
+            super.validateBeforeFindExample(entity, pageable);
+        }
+    }
 
     @BeforeEach
     public void setUp() {
-        sut = mock(AbstractCrudService.class);
+        sut = mock(AbstractCrudServiceTestImpl.class);
     }
 
     @Test
@@ -88,7 +140,7 @@ public class AbstractCrudServiceTest {
     public void should_throw_exception_when_persist_entity_throws_exception() throws ServiceException {
         final ProjectEntity projectEntity = ProjectEntityFactory.buildSimpleEntityWithId(1L);
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
-        when(mockRepo.save(projectEntity)).thenThrow(Exception.class);
+        doThrow(RuntimeException.class).when(mockRepo).save(projectEntity);
         when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
@@ -130,7 +182,7 @@ public class AbstractCrudServiceTest {
     public void should_throw_exception_when_delete_fail() throws ServiceException {
         final long id = 1L;
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
-        doThrow(Exception.class).when(mockRepo).deleteById(isA(Long.class));
+        doThrow(RuntimeException.class).when(mockRepo).deleteById(isA(Long.class));
         when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
@@ -165,7 +217,7 @@ public class AbstractCrudServiceTest {
     @Test
     public void should_throw_exception_when_find_all_fail() throws ServiceException {
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
-        when(mockRepo.findAll()).thenThrow(Exception.class);
+        when(mockRepo.findAll()).thenThrow(RuntimeException.class);
         when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
@@ -217,7 +269,7 @@ public class AbstractCrudServiceTest {
     public void should_throw_exception_when_find_all_paginated_throw_exception() throws ServiceException {
         final Pageable pageable = PageFactory.buildSimplePageable();
         final ProjectRepository mockRepo = mock(ProjectRepository.class);
-        when(mockRepo.findAll(any(Pageable.class))).thenThrow(Exception.class);
+        doThrow(RuntimeException.class).when(mockRepo).findAll(any(Pageable.class));
         when(sut.getRepository()).thenReturn(mockRepo);
 
         doCallRealMethod()
@@ -256,11 +308,11 @@ public class AbstractCrudServiceTest {
     public void should_throw_exception_when_entity_is_null_before_find_by_example() throws ServiceException {
         doCallRealMethod()
                 .when(sut)
-                .findByExample(any(ProjectEntity.class), any(Pageable.class));
+                .findByExample(any(), any());
 
         doCallRealMethod()
                 .when(sut)
-                .validateBeforeFindExample(any(ProjectEntity.class), any(Pageable.class));
+                .validateBeforeFindExample(any(), any());
 
         final ServiceException expectedException =
                 assertThrows(ServiceException.class, () -> sut.findByExample(null, null));
@@ -272,11 +324,11 @@ public class AbstractCrudServiceTest {
     public void should_throw_exception_when_pageable_is_null_before_find_by_example() throws ServiceException {
         doCallRealMethod()
                 .when(sut)
-                .findByExample(any(ProjectEntity.class), any(Pageable.class));
+                .findByExample(any(), any());
 
         doCallRealMethod()
                 .when(sut)
-                .validateBeforeFindExample(any(ProjectEntity.class), any(Pageable.class));
+                .validateBeforeFindExample(any(), any());
 
         final ServiceException expectedException =
                 assertThrows(ServiceException.class, () -> sut.findByExample(ProjectEntityFactory.buildSimpleEntityWithoutId(), null));

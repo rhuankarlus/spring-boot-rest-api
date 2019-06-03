@@ -1,8 +1,9 @@
-package br.com.rk.services.user.impl;
+package br.com.rk.services.unit.user.impl;
 
 import br.com.rk.entities.user.Role;
 import br.com.rk.repositories.user.RoleRepository;
 import br.com.rk.services.exception.ServiceException;
+import br.com.rk.services.user.impl.RoleCrudServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
